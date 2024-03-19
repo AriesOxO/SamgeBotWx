@@ -47,6 +47,14 @@ func GetMsgSenderInGroup(msg *openwechat.Message, errorTip string) *openwechat.U
 	return sender
 }
 
+func GetMsgSenderNickNameInGroup(msg *openwechat.Message) string {
+	sender, err := msg.SenderInGroup()
+	if err != nil {
+		return ""
+	}
+	return sender.NickName
+}
+
 // GetMsgReceiver 获取消息接收者信息
 func GetMsgReceiver(msg *openwechat.Message, errorTip string) *openwechat.User {
 	receiver, err := msg.Receiver()

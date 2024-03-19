@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -78,43 +79,20 @@ func GetCommentsByNumber(number int) ([]*Comment, error) {
 	}
 	return comments, nil
 }
-
-/**
-// 初始化数据库
-	if err := db.InitDB(); err != nil {
-		log.Fatalf("Error initializing database: %v", err)
+func UpdateCommentByCondition(wxNickName string, number int, novelTitle, newCommentText string) error {
+	result := DB.Model(&Comment{}).Where("wx_nick_name = ? AND number = ? AND novel_title = ?", wxNickName, number, novelTitle).Update("comment", newCommentText)
+	if result.Error != nil {
+		return result.Error
 	}
+	fmt.Printf("Updated %v record(s)\n", result.RowsAffected)
+	return nil
+}
 
-	// 创建新评论
-	newComment := &db.Comment{
-		WxID:        "wx1233",
-		WxNickName:  "user1323",
-		Number:      1,
-		NovelTitle:  "Novel31",
-		CommentText: "Great no3vel!",
-		CreateTime:  time.Now().Format(time.DateTime),
-		UpdateTime:  time.Now().Format(time.DateTime),
+func FindCommentByCondition(wxNickName string, number int, novelTitle string) (*Comment, error) {
+	var comment Comment
+	result := DB.Where("wx_nick_name = ? AND number = ? AND novel_title = ?", wxNickName, number, novelTitle).First(&comment)
+	if result.Error != nil {
+		return nil, result.Error
 	}
-	if err := db.CreateComment(newComment); err != nil {
-		log.Fatalf("Error creating comment: %v", err)
-	}
-
-	// 根据ID获取评论
-	retrievedComment, err := db.GetCommentByID(newComment.ID)
-	if err != nil {
-		log.Fatalf("Error getting comment by ID: %v", err)
-	}
-	log.Printf("Retrieved comment: %+v", retrievedComment)
-
-	// 更新评论
-	retrievedComment.CommentText = "Updated comment!"
-	if err := db.UpdateComment(retrievedComment); err != nil {
-		log.Fatalf("Error updating comment: %v", err)
-	}
-
-	//// 删除评论
-	//if err := db.DeleteCommentByID(retrievedComment.ID); err != nil {
-	//	log.Fatalf("Error deleting comment by ID: %v", err)
-	//}
-	log.Println("Comment deleted successfully")
-*/
+	return &comment, nil
+}

@@ -1,9 +1,13 @@
 package botMsg
 
 import (
+	"SamgeWxApi/cmd/db"
 	"SamgeWxApi/cmd/wxBot/botUtil"
 	"fmt"
 	"github.com/eatmoreapple/openwechat"
+	"log"
+	"regexp"
+	"time"
 )
 
 // ParseMessage 注册消息处理函数
@@ -16,14 +20,14 @@ func ParseMessage(bot *openwechat.Bot) {
 // regDispatcher 注册消息调度
 func regDispatcher(dispatcher *openwechat.MessageMatchDispatcher) {
 	// 按对象类型区分处理：如 添加好友、群组、好友、自己、公众号、指定名称的群组/好友、自定义条件的用户
-	OnFriendAdd(dispatcher)
-	OnFriend(dispatcher)
-	OnGroup(dispatcher)
-	OnUser(dispatcher)
-	OnFriendByNickName(dispatcher, "")
-	OnFriendByRemarkName(dispatcher, "")
-	OnGroupByGroupName(dispatcher, "")
-	OnUserMp(dispatcher) // 自定义监听公众号类型消息
+	//OnFriendAdd(dispatcher)
+	//OnFriend(dispatcher)
+	//OnGroup(dispatcher)
+	//OnUser(dispatcher)
+	//OnFriendByNickName(dispatcher, "")
+	//OnFriendByRemarkName(dispatcher, "")
+	OnGroupByGroupName(dispatcher, "评论统计需求调研")
+	//OnUserMp(dispatcher) // 自定义监听公众号类型消息
 
 	// 按消息类型区分处理。目前不采用这种方式，因为不同类型可以用工具类对msg统一区分处理
 	//OnText(dispatcher)
@@ -104,8 +108,41 @@ func OnFriendByRemarkName(dispatcher *openwechat.MessageMatchDispatcher, remarkN
 
 // OnGroupByGroupName 注册根据群名是否匹配的消息处理函数
 func OnGroupByGroupName(dispatcher *openwechat.MessageMatchDispatcher, groupName string) {
-	dispatcher.OnGroupByGroupName(groupName, func(ctx *openwechat.MessageContext) {
-		debugPrintMsg("OnGroupByGroupName 注册根据群名是否匹配的消息处理函数", fmt.Sprintf("%s | %s", groupName, getSenderNameAndRawContent(ctx)))
+	dispatcher.OnGroupByGroupName(groupName, func(ctx *openwechat.MessageContext) { // 确保是群文本消息
+		if ctx.IsTickledMe() {
+			ctx.ReplyText("拍我干嘛！去读书啊！去码字！")
+		}
+		msgContent := ctx.Content
+		if ctx.IsAt() {
+			if err := db.InitDB(); err != nil {
+				log.Fatalf("Error initializing database: %v", err)
+			}
+			sender, err := ctx.SenderInGroup() // 获取群内发送者信息
+			if err != nil {
+				log.Println("Error getting group member:", err)
+				return
+			}
+			// 使用正则表达式解析消息
+			re := regexp.MustCompile(`《([^》]+)》\s*(.+)`)
+			matches := re.FindStringSubmatch(msgContent)
+			if len(matches) <= 2 || len(matches[2]) < 1 {
+				ctx.ReplyText("评论格式错误，请参考格式@小书童《小说名字》评论内容@" + sender.NickName)
+				return
+			}
+			newComment := &db.Comment{
+				WxID:        sender.Alias,
+				WxNickName:  sender.NickName,
+				Number:      1,
+				NovelTitle:  matches[1],
+				CommentText: matches[2],
+				CreateTime:  time.Now().Format(time.DateTime),
+				UpdateTime:  time.Now().Format(time.DateTime),
+			}
+			db.CreateComment(newComment)
+			ctx.ReplyText("感谢评论,已收录@" + sender.NickName)
+		}
+
+		//debugPrintMsg("OnGroupByGroupName 注册根据群名是否匹配的消息处理函数", fmt.Sprintf("%s | %s", groupName, getSenderNameAndRawContent(ctx)))
 	})
 }
 
@@ -118,7 +155,7 @@ func OnFriendByNickName(dispatcher *openwechat.MessageMatchDispatcher, nickName 
 
 // getSenderNameAndRawContent 获取发送者名称+原始消息内容 - 这个目前主要输出日志用
 func getSenderNameAndRawContent(ctx *openwechat.MessageContext) string {
-	return fmt.Sprintf("%s | %s", botUtil.GetMsgSenderNickName(ctx.Message), ctx.RawContent)
+	return fmt.Sprintf("%s | %s", botUtil.GetMsgSenderNickNameInGroup(ctx.Message), ctx.RawContent)
 }
 
 // checkUser 检查用户是否符合要求

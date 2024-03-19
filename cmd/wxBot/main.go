@@ -3,13 +3,11 @@ package main
 // 文档：https://github.com/eatmoreapple/openwechat
 
 import (
-	_ "SamgeWxApi/cmd/db"
 	config "SamgeWxApi/cmd/utils/u_config"
 	"SamgeWxApi/cmd/wxBot/botHandler"
 	"SamgeWxApi/cmd/wxBot/botMsg"
 	"errors"
 	"fmt"
-	_ "time"
 )
 
 // RunBot 运行wx机器人

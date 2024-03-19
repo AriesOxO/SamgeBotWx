@@ -27,6 +27,7 @@ func regDispatcher(dispatcher *openwechat.MessageMatchDispatcher) {
 	//OnFriendByNickName(dispatcher, "")
 	//OnFriendByRemarkName(dispatcher, "")
 	OnGroupByGroupName(dispatcher, "评论统计需求调研")
+	OnGroupByGroupName(dispatcher, "匪帮")
 	//OnUserMp(dispatcher) // 自定义监听公众号类型消息
 
 	// 按消息类型区分处理。目前不采用这种方式，因为不同类型可以用工具类对msg统一区分处理
@@ -110,7 +111,7 @@ func OnFriendByRemarkName(dispatcher *openwechat.MessageMatchDispatcher, remarkN
 func OnGroupByGroupName(dispatcher *openwechat.MessageMatchDispatcher, groupName string) {
 	dispatcher.OnGroupByGroupName(groupName, func(ctx *openwechat.MessageContext) { // 确保是群文本消息
 		if ctx.IsTickledMe() {
-			ctx.ReplyText("拍我干嘛！去读书啊！去码字！")
+			ctx.ReplyText("拍本少爷干嘛！去读书啊！去码字！")
 		}
 		msgContent := ctx.Content
 		if ctx.IsAt() {
@@ -123,18 +124,23 @@ func OnGroupByGroupName(dispatcher *openwechat.MessageMatchDispatcher, groupName
 				return
 			}
 			// 使用正则表达式解析消息
-			re := regexp.MustCompile(`《([^》]+)》\s*(.+)`)
+			re := regexp.MustCompile(`@(.+?)\s*(《.+?》)\s*(.+)`)
 			matches := re.FindStringSubmatch(msgContent)
-			if len(matches) <= 2 || len(matches[2]) < 1 {
-				ctx.ReplyText("评论格式错误，请参考格式@小书童《小说名字》评论内容@" + sender.NickName)
+			if len(matches) <= 2 {
+				ctx.ReplyText("评论格式错误，请参考格式@少爷《小说名字》评论内容@" + sender.NickName)
+				return
+			}
+
+			if len(matches[3]) < 30 {
+				ctx.ReplyText("评论内容过少，本少爷不收@" + sender.NickName)
 				return
 			}
 			newComment := &db.Comment{
 				WxID:        sender.Alias,
 				WxNickName:  sender.NickName,
 				Number:      1,
-				NovelTitle:  matches[1],
-				CommentText: matches[2],
+				NovelTitle:  matches[2],
+				CommentText: matches[3],
 				CreateTime:  time.Now().Format(time.DateTime),
 				UpdateTime:  time.Now().Format(time.DateTime),
 			}

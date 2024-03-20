@@ -1,7 +1,7 @@
 package botMsg
 
 import (
-	"SamgeWxApi/cmd/db"
+	"SamgeWxApi/cmd/server/db"
 	"SamgeWxApi/cmd/wxBot/botUtil"
 	"fmt"
 	"github.com/eatmoreapple/openwechat"
@@ -138,7 +138,7 @@ func OnGroupByGroupName(dispatcher *openwechat.MessageMatchDispatcher, groupName
 			newComment := &db.Comment{
 				WxID:        sender.Alias,
 				WxNickName:  sender.NickName,
-				Number:      1,
+				Number:      -1,
 				NovelTitle:  matches[2],
 				CommentText: matches[3],
 				CreateTime:  time.Now().Format(time.DateTime),

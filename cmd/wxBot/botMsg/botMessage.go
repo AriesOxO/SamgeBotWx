@@ -111,7 +111,7 @@ func OnFriendByRemarkName(dispatcher *openwechat.MessageMatchDispatcher, remarkN
 func OnGroupByGroupName(dispatcher *openwechat.MessageMatchDispatcher, groupName string) {
 	dispatcher.OnGroupByGroupName(groupName, func(ctx *openwechat.MessageContext) { // 确保是群文本消息
 		if ctx.IsTickledMe() {
-			ctx.ReplyText("拍本少爷干嘛！去读书啊！去码字！")
+			ctx.ReplyText("拍本少爷干嘛！去读书！去码字！去谈恋爱哇Q_Q")
 		}
 		msgContent := ctx.Content
 		if ctx.IsAt() {

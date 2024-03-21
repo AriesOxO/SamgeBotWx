@@ -2,6 +2,7 @@ package server
 
 import (
 	"SamgeWxApi/cmd/server/db"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -10,6 +11,10 @@ import (
 func StartApiServer() {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
+	// 添加CORS中间件
+	r.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"*"}, // 允许的域名}, // 允许的HTTP方法
+	}))
 	r.GET("/api/comments", func(c *gin.Context) {
 		if err := db.InitDB(); err != nil {
 			log.Fatalf("Error initializing database: %v", err)

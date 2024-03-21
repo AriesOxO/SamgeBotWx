@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评论展示页面</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>评论展示页面</h1>
+    <div class="filters">
+        <label for="wxNickName">微信昵称:</label>
+        <input type="text" id="wxNickName">
+        <label for="novelTitle">小说标题:</label>
+        <input type="text" id="novelTitle">
+        <button onclick="fetchComments()">查询</button>
+    </div>
+    <table id="commentsTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>微信昵称</th>
+            <th>评论数</th>
+            <th>小说标题</th>
+            <th>评论内容</th>
+            <th>创建时间</th>
+            <th>更新时间</th>
+        </tr>
+        </thead>
+        <tbody id="commentsBody">
+        <!-- Comments will be inserted here -->
+        </tbody>
+    </table>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

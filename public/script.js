@@ -1,8 +1,30 @@
 function fetchComments() {
     const wxNickName = document.getElementById('wxNickName').value;
     const novelTitle = document.getElementById('novelTitle').value;
+    const numberOfRaces = document.getElementById('numberOfRaces').value;
+    const startTime = document.getElementById('startTime').value;
+    const endTime = document.getElementById('endTime').value;
 
-    const url = `http://127.0.0.1:8888/api/comments?wxNickName=${wxNickName}&novelTitle=${novelTitle}`;
+    let url = 'http://127.0.0.1:8888/api/comments?';
+
+    if (wxNickName.trim() !== '') {
+        url += `&wxNickName=${wxNickName}`;
+    }
+    if (novelTitle.trim() !== '') {
+        url += `&novelTitle=${novelTitle}`;
+    }
+    if (numberOfRaces.trim() !== '') {
+        url += `&number=${numberOfRaces}`;
+    }
+    if (startTime.trim() !== '') {
+        url += `&startTime=${startTime}`;
+    }
+    if (endTime.trim() !== '') {
+        url += `&endTime=${endTime}`;
+    }
+
+// 去掉第一个参数的 &
+    url = url.replace('?&', '?');
 
     fetch(url)
         .then(response => response.json())

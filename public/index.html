@@ -14,6 +14,12 @@
         <input type="text" id="wxNickName">
         <label for="novelTitle">小说标题:</label>
         <input type="text" id="novelTitle">
+        <label for="novelTitle">比赛届数:</label>
+        <input type="number" id="numberOfRaces">
+        <label for="novelTitle">开始时间:</label>
+        <input type="date" id="startTime">
+        <label for="novelTitle">结束时间:</label>
+        <input type="date" id="endTime">
         <button onclick="fetchComments()">查询</button>
     </div>
     <table id="commentsTable">
@@ -24,7 +30,7 @@
             <th>评论数</th>
             <th>小说标题</th>
             <th>评论内容</th>
-            <th>创建时间</th>
+            <th>评论时间</th>
             <th>更新时间</th>
         </tr>
         </thead>

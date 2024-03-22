@@ -20,6 +20,13 @@ type Comment struct {
 	UpdateTime  string `gorm:"not null;column:update_time"`
 }
 
+type CommentStatic struct {
+	WxNickName string
+	NovelTitle string
+	Number     string
+	Count      int
+}
+
 var DB *gorm.DB
 
 func InitDB() error {

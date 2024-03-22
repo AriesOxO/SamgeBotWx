@@ -2,6 +2,8 @@ package server
 
 import (
 	"SamgeWxApi/cmd/server/db"
+	"database/sql"
+	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -15,6 +17,8 @@ func StartApiServer() {
 	r.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"*"}, // 允许的域名}, // 允许的HTTP方法
 	}))
+
+	//根据条件查询所有评论
 	r.GET("/api/comments", func(c *gin.Context) {
 		if err := db.InitDB(); err != nil {
 			log.Fatalf("Error initializing database: %v", err)
@@ -39,5 +43,83 @@ func StartApiServer() {
 		query.Find(&comments)
 		c.JSON(http.StatusOK, comments)
 	})
+	//评论统计接口
+	r.GET("/api/static", func(c *gin.Context) {
+		groupType := c.Query("groupType")
+		sortType := c.Query("sortType")
+		wxNickName := c.Query("wxNickName")
+		novelTitle := c.Query("novelTitle")
+		number := c.Query("number")
+		condition := "1=1"
+
+		if wxNickName != "" {
+			condition += " AND wxNickName = '" + wxNickName + "'"
+		}
+
+		if novelTitle != "" {
+			condition += " AND novelTitle = '" + novelTitle + "'"
+		}
+
+		if number != "" {
+			condition += " AND number = '" + number + "'"
+		}
+		var result []db.CommentStatic
+		if sortType == "" {
+			sortType = "0" // 默认降序
+		}
+		var groutBy string
+		switch groupType {
+		case "1":
+			groutBy = "wx_nick_name"
+		case "2":
+			groutBy = "novel_title"
+		case "3":
+			groutBy = "number"
+		default:
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid groupType"})
+			return
+		}
+		var sortOrder string
+		if sortType == "1" {
+			sortOrder = "ASC"
+		} else {
+			sortOrder = "DESC"
+		}
+		query := fmt.Sprintf("SELECT %s, COUNT(*) AS count FROM comments where  %s GROUP BY %s ORDER BY count %s", groutBy, condition, groutBy, sortOrder)
+		if err := db.InitDB(); err != nil {
+			log.Fatalf("Error initializing database: %v", err)
+		}
+		db.DB.Debug()
+		rows, err := db.DB.Raw(query).Rows()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
+			return
+		}
+		defer func(rows *sql.Rows) {
+			err := rows.Close()
+			if err != nil {
+
+			}
+		}(rows)
+		for rows.Next() {
+			var (
+				grouptype string
+				count     int
+			)
+			err := rows.Scan(&grouptype, &count)
+			if err != nil {
+				log.Println("Error scanning rows:", err)
+				continue
+			}
+			result = append(result, db.CommentStatic{
+				WxNickName: grouptype,
+				NovelTitle: grouptype,
+				Number:     grouptype,
+				Count:      count,
+			})
+		}
+		c.JSON(http.StatusOK, result)
+	})
+
 	r.Run(":8888") // listen and serve on 0.0.0.0:8080
 }

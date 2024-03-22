@@ -1,37 +1,66 @@
 body {
     font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 80%; /* 根据需要调整 */
     margin: 0 auto;
     padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
     text-align: center;
+    color: #333;
 }
 
 .filters {
-    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: nowrap; /* 防止换行 */
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    gap: 10px;
 }
 
 .filters label {
-    margin-right: 10px;
+    margin-right: 5px; /* 为标签和输入框之间提供空间 */
 }
 
-.filters input {
-    margin-right: 20px;
+.filters input,
+.filters button {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    flex-grow: 1; /* 允许元素根据可用空间伸展 */
+    flex-shrink: 1; /* 允许元素在空间不足时缩小 */
+    flex-basis: 0; /* 设置元素的基础宽度为0，以平等分配空间 */
+}
+
+.filters button {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.filters button:hover {
+    background-color: #0056b3;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
 }
 
 table, th, td {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 12px;
     text-align: left;
 }
 

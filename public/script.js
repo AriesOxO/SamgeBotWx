@@ -43,7 +43,6 @@ function displayComments(comments) {
     comments.forEach(comment => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${comment.ID}</td>
             <td>${comment.WxNickName}</td>
             <td>${comment.Number}</td>
             <td>${comment.NovelTitle}</td>

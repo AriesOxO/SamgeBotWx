@@ -1,24 +1,3 @@
-.toggleTab {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.tabButton {
-    padding: 12px 24px; /* 按钮稍微变大 */
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 20px; /* 圆角 */
-    cursor: pointer;
-    margin: 0 10px; /* 按钮间距 */
-    transition: background-color 0.3s ease;
-}
-
-.tabButton:hover {
-    background-color: #0056b3;
-}
-
 
 .toggleTab {
     display: flex;
@@ -84,4 +63,33 @@
 
 .sort-buttons button:hover {
     background-color: #218838;
+}
+.tables-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 40px;
+}
+
+.table-wrapper {
+    flex: 1;
+    margin: 0 100px; /* Adjust spacing between tables */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+.pagination{
+    width: 60%;
 }

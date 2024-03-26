@@ -6,7 +6,7 @@
     <title>评论统计</title>
     <link rel="stylesheet" href="css/statistics.css">
 </head>
-<body>
+<body onload ="fetchComments('static', 1, 20)">
 <div class="container">
     <div class="toggleTab">
         <button onclick="window.location.href='index.html'" class="tabButton">评论展示</button>
@@ -21,44 +21,62 @@
         <label for="novelTitle">比赛届数:</label>
         <input type="number" id="numberOfRaces">
         <div class="sort-buttons">
-            <button onclick="fetchComments('static',1)">升序</button>
-            <button onclick="fetchComments('static',2)">倒序</button>
+            <button onclick="fetchComments('static', 1, 20)">升序</button>
+            <button onclick="fetchComments('static', 2, 20)">倒序</button>
         </div>
-        <button onclick="fetchComments('static')">统计数据</button>
+        <button onclick="fetchComments('static', 1, 20)">统计数据</button>
     </div>
-    <table id="statisticsByNickNameTable">
-        <thead>
-        <tr>
-            <th>评论者</th>
-            <th>评论数量</th>
-        </tr>
-        </thead>
-        <tbody id="statisticsByNickNameBody">
-        <!-- Comments will be inserted here -->
-        </tbody>
-    </table>
-    <table id="statisticsByNovelTitleTable">
-        <thead>
-        <tr>
-            <th>小说名称</th>
-            <th>评论数量</th>
-        </tr>
-        </thead>
-        <tbody id="statisticsByNovelTitleBody">
-        <!-- Comments will be inserted here -->
-        </tbody>
-    </table>
-    <table id="statisticsByNumber">
-        <thead>
-        <tr>
-            <th>小说届数</th>
-            <th>评论数量</th>
-        </tr>
-        </thead>
-        <tbody id="statisticsByNumberBody">
-        <!-- Comments will be inserted here -->
-        </tbody>
-    </table>
+
+    <!-- Tables Container -->
+    <div class="tables-container">
+        <!-- Table 1 -->
+        <div class="table-wrapper">
+            <table id="statisticsByNickNameTable">
+                <thead>
+                <tr>
+                    <th>评论者</th>
+                    <th>评论数量</th>
+                </tr>
+                </thead>
+                <tbody id="statisticsByNickNameBody">
+                <!-- Comments will be inserted here -->
+                </tbody>
+            </table>
+            <div class="pagination" id="paginationByNickName"></div>
+        </div>
+
+        <!-- Table 2 -->
+        <div class="table-wrapper">
+            <table id="statisticsByNovelTitleTable">
+                <thead>
+                <tr>
+                    <th>小说名称</th>
+                    <th>评论数量</th>
+                </tr>
+                </thead>
+                <tbody id="statisticsByNovelTitleBody">
+                <!-- Comments will be inserted here -->
+                </tbody>
+            </table>
+            <div class="pagination" id="paginationByNovelTitle"></div>
+        </div>
+
+        <!-- Table 3 -->
+        <div class="table-wrapper">
+            <table id="statisticsByNumber">
+                <thead>
+                <tr>
+                    <th>小说届数</th>
+                    <th>评论数量</th>
+                </tr>
+                </thead>
+                <tbody id="statisticsByNumberBody">
+                <!-- Comments will be inserted here -->
+                </tbody>
+            </table>
+            <div class="pagination" id="paginationByNumber"></div>
+        </div>
+    </div>
 </div>
 <script src="js/statistics.js"></script>
 </body>

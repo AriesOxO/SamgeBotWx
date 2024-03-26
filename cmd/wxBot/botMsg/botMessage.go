@@ -26,7 +26,6 @@ func regDispatcher(dispatcher *openwechat.MessageMatchDispatcher) {
 	//OnUser(dispatcher)
 	//OnFriendByNickName(dispatcher, "")
 	//OnFriendByRemarkName(dispatcher, "")
-	OnGroupByGroupName(dispatcher, "评论统计需求调研")
 	OnGroupByGroupName(dispatcher, "匪帮")
 	//OnUserMp(dispatcher) // 自定义监听公众号类型消息
 

@@ -1,8 +1,8 @@
-function fetchComments(interfaceName,sortType) {
+function fetchComments(interfaceName, sortType, limit) {
     const wxNickName = document.getElementById('wxNickName').value;
     const novelTitle = document.getElementById('novelTitle').value;
     const numberOfRaces = document.getElementById('numberOfRaces').value;
-    let url = 'http://127.0.0.1:8888/api/'+interfaceName+'?';
+    let url = 'http://127.0.0.1:8888/api/' + interfaceName + '?';
     const groupTypeValues = [1, 2, 3]; // GroupType的三种取值
 
     groupTypeValues.forEach(groupType => {
@@ -24,11 +24,11 @@ function fetchComments(interfaceName,sortType) {
             .then(response => response.json())
             .then(data => {
                 if (groupType === 1) {
-                    displayDataByNickName(data);
+                    displayDataByNickName(data, limit, groupType);
                 } else if (groupType === 2) {
-                    displayDataByNovelTitle(data);
+                    displayDataByNovelTitle(data, limit, groupType);
                 } else if (groupType === 3) {
-                    displayDataByNumber(data);
+                    displayDataByNumber(data, limit, groupType);
                 }
             })
             .catch(error => {
@@ -37,44 +37,152 @@ function fetchComments(interfaceName,sortType) {
     });
 }
 
-
-function displayDataByNickName(comments) {
+function displayDataByNickName(comments, limit, groupType) {
     const tableBody = document.getElementById('statisticsByNickNameBody');
-    tableBody.innerHTML = '';
+    const paginationDiv = document.getElementById('paginationByNickName');
 
-    comments.forEach(comment => {
+    // Clear previous data
+    tableBody.innerHTML = '';
+    paginationDiv.innerHTML = '';
+
+    // Calculate number of pages
+    const totalPages = Math.ceil(comments.length / limit);
+
+    // Display current page
+    let currentPage = 1;
+    const startIndex = (currentPage - 1) * limit;
+    const endIndex = Math.min(startIndex + limit, comments.length);
+
+    for (let i = startIndex; i < endIndex; i++) {
+        const comment = comments[i];
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${comment.WxNickName}</td>
             <td>${comment.Count}</td>
         `;
         tableBody.appendChild(row);
-    });
+    }
+
+    // Create pagination
+    for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.onclick = function () {
+            currentPage = i;
+            const startIndex = (currentPage - 1) * limit;
+            const endIndex = Math.min(startIndex + limit, comments.length);
+            displayCurrentPageData(comments, startIndex, endIndex, tableBody,1);
+        };
+
+        paginationDiv.appendChild(button);
+    }
 }
 
-function displayDataByNovelTitle(comments) {
+function displayDataByNovelTitle(comments, limit, groupType) {
     const tableBody = document.getElementById('statisticsByNovelTitleBody');
-    tableBody.innerHTML = '';
+    const paginationDiv = document.getElementById('paginationByNovelTitle');
 
-    comments.forEach(comment => {
+    // Clear previous data
+    tableBody.innerHTML = '';
+    paginationDiv.innerHTML = '';
+
+    // Calculate number of pages
+    const totalPages = Math.ceil(comments.length / limit);
+
+    // Display current page
+    let currentPage = 1;
+    const startIndex = (currentPage - 1) * limit;
+    const endIndex = Math.min(startIndex + limit, comments.length);
+
+    for (let i = startIndex; i < endIndex; i++) {
+        const comment = comments[i];
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${comment.NovelTitle}</td>
             <td>${comment.Count}</td>
         `;
         tableBody.appendChild(row);
-    });
-}
-function displayDataByNumber(comments) {
-    const tableBody = document.getElementById('statisticsByNumberBody');
-    tableBody.innerHTML = '';
+    }
 
-    comments.forEach(comment => {
+    // Create pagination
+    for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.onclick = function () {
+            currentPage = i;
+            const startIndex = (currentPage - 1) * limit;
+            const endIndex = Math.min(startIndex + limit, comments.length);
+            displayCurrentPageData(comments, startIndex, endIndex, tableBody,2);
+        };
+
+        paginationDiv.appendChild(button);
+    }
+}
+
+function displayDataByNumber(comments, limit, groupType) {
+    const tableBody = document.getElementById('statisticsByNumberBody');
+    const paginationDiv = document.getElementById('paginationByNumber');
+
+    // Clear previous data
+    tableBody.innerHTML = '';
+    paginationDiv.innerHTML = '';
+
+    // Calculate number of pages
+    const totalPages = Math.ceil(comments.length / limit);
+
+    // Display current page
+    let currentPage = 1;
+    const startIndex = (currentPage - 1) * limit;
+    const endIndex = Math.min(startIndex + limit, comments.length);
+
+    for (let i = startIndex; i < endIndex; i++) {
+        const comment = comments[i];
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${comment.Number}</td>
+            <td>${comment.NovelTitle}</td>
             <td>${comment.Count}</td>
         `;
         tableBody.appendChild(row);
-    });
+    }
+
+    // Create pagination
+    for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.onclick = function () {
+            currentPage = i;
+            const startIndex = (currentPage - 1) * limit;
+            const endIndex = Math.min(startIndex + limit, comments.length);
+            displayCurrentPageData(comments, startIndex, endIndex, tableBody,3);
+        };
+
+        paginationDiv.appendChild(button);
+    }
+}
+
+function displayCurrentPageData(comments, startIndex, endIndex, tableBody,lineType) {
+    tableBody.innerHTML = '';
+    for (let i = startIndex; i < endIndex; i++) {
+        const comment = comments[i];
+        const row = document.createElement('tr');
+        if(1 === lineType){
+            row.innerHTML = `
+            <td>${comment.WxNickName}</td>
+            <td>${comment.Count}</td>
+        `;
+        }
+        if(2 === lineType){
+            row.innerHTML = `
+            <td>${comment.Number}</td>
+            <td>${comment.Count}</td>
+        `;
+        }
+        if(3 === lineType){
+            row.innerHTML = `
+            <td>${comment.Number}</td>
+            <td>${comment.Count}</td>
+        `;
+        }
+        tableBody.appendChild(row);
+    }
 }

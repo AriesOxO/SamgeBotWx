@@ -1,8 +1,8 @@
-function fetchComments() {
+function fetchComments(interfaceName) {
     const wxNickName = document.getElementById('wxNickName').value;
     const novelTitle = document.getElementById('novelTitle').value;
     const numberOfRaces = document.getElementById('numberOfRaces').value;
-    let url = 'http://127.0.0.1:8888/api/comments?';
+    let url = 'http://127.0.0.1:8888/api/'+interfaceName+'?';
 
     if (wxNickName.trim() !== '') {
         url += `&wxNickName=${wxNickName}`;

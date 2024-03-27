@@ -7,6 +7,7 @@ import (
 	"github.com/eatmoreapple/openwechat"
 	"log"
 	"regexp"
+	"strconv"
 	"time"
 )
 
@@ -135,7 +136,7 @@ func OnGroupByGroupName(dispatcher *openwechat.MessageMatchDispatcher, groupName
 				return
 			}
 			newComment := &db.Comment{
-				WxID:        sender.Alias,
+				MsgId:       ctx.Message.MsgId,
 				WxNickName:  sender.NickName,
 				Number:      -1,
 				NovelTitle:  matches[2],
@@ -146,7 +147,23 @@ func OnGroupByGroupName(dispatcher *openwechat.MessageMatchDispatcher, groupName
 			db.CreateComment(newComment)
 			ctx.ReplyText("感谢评论,已收录@" + sender.NickName)
 		}
-
+		if ctx.IsRecalled() {
+			if err := db.InitDB(); err != nil {
+				log.Fatalf("Error initializing database: %v", err)
+			}
+			msg := ctx.Message
+			revokeMsg, _ := msg.RevokeMsg()    // 获取撤回消息对象
+			msgId := revokeMsg.RevokeMsg.MsgId // 拿到撤回消息的id
+			comment, err := db.GetCommentByWxID(strconv.FormatInt(msgId, 10))
+			if err != nil {
+				fmt.Println("获取评论时出错:", err)
+				return
+			}
+			if comment != nil && len(comment.WxNickName) > 0 {
+				ctx.ReplyText("评论消息测回,收录评论已删除@" + comment.WxNickName + "请重新评论哦QvQ")
+				db.DeleteCommentByWxID(strconv.FormatInt(msgId, 10))
+			}
+		}
 		//debugPrintMsg("OnGroupByGroupName 注册根据群名是否匹配的消息处理函数", fmt.Sprintf("%s | %s", groupName, getSenderNameAndRawContent(ctx)))
 	})
 }

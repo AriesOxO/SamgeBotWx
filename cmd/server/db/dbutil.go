@@ -11,7 +11,7 @@ import (
 // Comment 对应数据库中的 comment 表
 type Comment struct {
 	ID          uint   `gorm:"primaryKey;autoIncrement"`
-	WxID        string `gorm:"not null;column:wx_id"`
+	MsgId       string `gorm:"not null;column:msg_id"`
 	WxNickName  string `gorm:"not null;column:wx_nick_name"`
 	Number      int    `gorm:"not null;column:number"`
 	NovelTitle  string `gorm:"not null;column:novel_title"`
@@ -102,4 +102,23 @@ func FindCommentByCondition(wxNickName string, number int, novelTitle string) (*
 		return nil, result.Error
 	}
 	return &comment, nil
+}
+
+// 根据唯一的 WxID 删除评论数据
+func DeleteCommentByWxID(wxID string) error {
+	result := DB.Delete(&Comment{}, "wx_id = ?", wxID)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+// 根据唯一的 WxID 查询评论数据
+func GetCommentByWxID(wxID string) (*Comment, error) {
+	comment := &Comment{}
+	result := DB.Where("wx_id = ?", wxID).First(comment)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return comment, nil
 }

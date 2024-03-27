@@ -1,5 +1,5 @@
 let currentPage = 1;
-let pageSize = 20;
+let pageSize = 10;
 
 function fetchComments(interfaceName, page, pageSize) {
     const wxNickName = document.getElementById('wxNickName').value;

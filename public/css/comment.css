@@ -123,8 +123,10 @@
 }
 
 .pagination {
+    transform: scale(1.2);
     margin-top: 20px;
     text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 添加轻微阴影 */
 }
 
 .pagination button {
@@ -135,13 +137,26 @@
     border: none;
     border-radius: 3px;
     cursor: pointer;
+    transition: background-color 0.3s ease; /* 添加背景色过渡效果 */
+}
+
+.pagination button:hover {
+    background-color: #0056b3; /* 鼠标悬停时的背景色 */
 }
 
 .pagination select {
     padding: 5px;
     margin: 0 5px;
+    border: 1px solid #ddd; /* 添加边框 */
+    border-radius: 3px; /* 统一边框圆角 */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* 添加轻微阴影 */
 }
 
 .pagination span {
+    border: 1px solid #ddd; /* 添加边框 */
+    border-radius: 3px; /* 统一边框圆角 */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* 添加轻微阴影 */
     margin: 0 5px;
+    font-weight: bold; /* 增加字体粗细 */
 }
+

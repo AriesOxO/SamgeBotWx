@@ -1,14 +1,10 @@
 package botMsg
 
 import (
-	"SamgeWxApi/cmd/server/db"
+	"SamgeWxApi/cmd/wxBot/botHandler"
 	"SamgeWxApi/cmd/wxBot/botUtil"
 	"fmt"
 	"github.com/eatmoreapple/openwechat"
-	"log"
-	"regexp"
-	"strconv"
-	"time"
 )
 
 // ParseMessage 注册消息处理函数
@@ -22,10 +18,10 @@ func ParseMessage(bot *openwechat.Bot) {
 func regDispatcher(dispatcher *openwechat.MessageMatchDispatcher) {
 	// 按对象类型区分处理：如 添加好友、群组、好友、自己、公众号、指定名称的群组/好友、自定义条件的用户
 	//OnFriendAdd(dispatcher)
-	//OnFriend(dispatcher)
+	OnFriend(dispatcher)
 	//OnGroup(dispatcher)
 	//OnUser(dispatcher)
-	//OnFriendByNickName(dispatcher, "")
+	OnFriendByNickName(dispatcher, "")
 	//OnFriendByRemarkName(dispatcher, "")
 	OnGroupByGroupName(dispatcher, "匪帮")
 	//OnUserMp(dispatcher) // 自定义监听公众号类型消息
@@ -110,60 +106,7 @@ func OnFriendByRemarkName(dispatcher *openwechat.MessageMatchDispatcher, remarkN
 // OnGroupByGroupName 注册根据群名是否匹配的消息处理函数
 func OnGroupByGroupName(dispatcher *openwechat.MessageMatchDispatcher, groupName string) {
 	dispatcher.OnGroupByGroupName(groupName, func(ctx *openwechat.MessageContext) { // 确保是群文本消息
-		if ctx.IsTickledMe() {
-			ctx.ReplyText("拍本少爷干嘛！去读书！去码字！去谈恋爱哇Q_Q")
-		}
-		msgContent := ctx.Content
-		if ctx.IsAt() {
-			if err := db.InitDB(); err != nil {
-				log.Fatalf("Error initializing database: %v", err)
-			}
-			sender, err := ctx.SenderInGroup() // 获取群内发送者信息
-			if err != nil {
-				log.Println("Error getting group member:", err)
-				return
-			}
-			// 使用正则表达式解析消息
-			re := regexp.MustCompile(`@(.+?)\s*(《.+?》)\s*(.+)`)
-			matches := re.FindStringSubmatch(msgContent)
-			if len(matches) <= 2 {
-				ctx.ReplyText("评论格式错误，请参考格式@少爷《小说名字》评论内容@" + sender.NickName)
-				return
-			}
-
-			if len(matches[3]) < 30 {
-				ctx.ReplyText("评论内容过少，本少爷不收@" + sender.NickName)
-				return
-			}
-			newComment := &db.Comment{
-				MsgId:       ctx.Message.MsgId,
-				WxNickName:  sender.NickName,
-				Number:      -1,
-				NovelTitle:  matches[2],
-				CommentText: matches[3],
-				CreateTime:  time.Now().Format(time.DateTime),
-				UpdateTime:  time.Now().Format(time.DateTime),
-			}
-			db.CreateComment(newComment)
-			ctx.ReplyText("感谢评论,已收录@" + sender.NickName)
-		}
-		if ctx.IsRecalled() {
-			if err := db.InitDB(); err != nil {
-				log.Fatalf("Error initializing database: %v", err)
-			}
-			msg := ctx.Message
-			revokeMsg, _ := msg.RevokeMsg()    // 获取撤回消息对象
-			msgId := revokeMsg.RevokeMsg.MsgId // 拿到撤回消息的id
-			comment, err := db.GetCommentByWxID(strconv.FormatInt(msgId, 10))
-			if err != nil {
-				fmt.Println("获取评论时出错:", err)
-				return
-			}
-			if comment != nil && len(comment.WxNickName) > 0 {
-				ctx.ReplyText("评论消息测回,收录评论已删除@" + comment.WxNickName + "请重新评论哦QvQ")
-				db.DeleteCommentByWxID(strconv.FormatInt(msgId, 10))
-			}
-		}
+		botHandler.FeiBang(ctx)
 		//debugPrintMsg("OnGroupByGroupName 注册根据群名是否匹配的消息处理函数", fmt.Sprintf("%s | %s", groupName, getSenderNameAndRawContent(ctx)))
 	})
 }
@@ -171,7 +114,27 @@ func OnGroupByGroupName(dispatcher *openwechat.MessageMatchDispatcher, groupName
 // OnFriendByNickName 注册根据好友昵称是否匹配的消息处理函数
 func OnFriendByNickName(dispatcher *openwechat.MessageMatchDispatcher, nickName string) {
 	dispatcher.OnFriendByNickName(nickName, func(ctx *openwechat.MessageContext) {
-		debugPrintMsg("OnFriendByNickName 注册根据好友昵称是否匹配的消息处理函数", fmt.Sprintf("%s | %s", nickName, getSenderNameAndRawContent(ctx)))
+		//if ctx.Content == "开启" {
+		//	config.BotEnable = 1
+		//	ctx.ReplyText(fmt.Sprintf("匪帮评论收集机器人已开启: %d", config.BotEnable))
+		//}
+		//if ctx.Content == "关闭" {
+		//	config.BotEnable = 0
+		//	ctx.ReplyText(fmt.Sprintf("匪帮评论收集机器人已关闭: %d", config.BotEnable))
+		//}
+		//if strings.HasPrefix(ctx.Content, "设置当前赛季=") {
+		//	parts := strings.Split(ctx.Content, "=")
+		//	if len(parts) == 2 {
+		//		season, err := strconv.Atoi(parts[1])
+		//		if err == nil {
+		//			config.NumberOfRaces = season
+		//			ctx.ReplyText(fmt.Sprintf("当前赛季设置为：%d", config.NumberOfRaces))
+		//			return
+		//		}
+		//	}
+		//	ctx.ReplyText("无效的赛季设置格式")
+		//}
+
 	})
 }
 

@@ -28,7 +28,7 @@ samge/samge_wx_bot:v2
 
 - 配置：
 ```shell
-cp config.dev.json config.json 
+cp config.json config.json 
 ```
 
 - 安装依赖：

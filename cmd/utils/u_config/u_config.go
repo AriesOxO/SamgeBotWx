@@ -11,6 +11,10 @@ import (
 	"sync"
 )
 
+var NumberOfRaces int = 18
+var BotEnable int = 0
+var superPwd string = "密码就是我不告诉你"
+
 const (
 	BotCacheDir      = "tmp/wxBotCache/botCacheFile"
 	BotLogDir        = "tmp/wxBotCache/botLog"

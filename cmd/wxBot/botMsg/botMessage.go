@@ -1,6 +1,7 @@
 package botMsg
 
 import (
+	config "SamgeWxApi/cmd/utils/u_config"
 	"SamgeWxApi/cmd/wxBot/botHandler"
 	"SamgeWxApi/cmd/wxBot/botUtil"
 	"fmt"
@@ -21,7 +22,7 @@ func regDispatcher(dispatcher *openwechat.MessageMatchDispatcher) {
 	OnFriend(dispatcher)
 	//OnGroup(dispatcher)
 	//OnUser(dispatcher)
-	OnFriendByNickName(dispatcher, "")
+	//OnFriendByNickName(dispatcher, "")
 	//OnFriendByRemarkName(dispatcher, "")
 	OnGroupByGroupName(dispatcher, "匪帮")
 	//OnUserMp(dispatcher) // 自定义监听公众号类型消息
@@ -106,7 +107,9 @@ func OnFriendByRemarkName(dispatcher *openwechat.MessageMatchDispatcher, remarkN
 // OnGroupByGroupName 注册根据群名是否匹配的消息处理函数
 func OnGroupByGroupName(dispatcher *openwechat.MessageMatchDispatcher, groupName string) {
 	dispatcher.OnGroupByGroupName(groupName, func(ctx *openwechat.MessageContext) { // 确保是群文本消息
-		botHandler.FeiBang(ctx)
+		if config.BotEnable == 1 {
+			botHandler.FeiBang(ctx)
+		}
 		//debugPrintMsg("OnGroupByGroupName 注册根据群名是否匹配的消息处理函数", fmt.Sprintf("%s | %s", groupName, getSenderNameAndRawContent(ctx)))
 	})
 }

@@ -1,8 +1,11 @@
-function fetchComments(interfaceName) {
+let currentPage = 1;
+let pageSize = 20;
+
+function fetchComments(interfaceName, page, pageSize) {
     const wxNickName = document.getElementById('wxNickName').value;
     const novelTitle = document.getElementById('novelTitle').value;
     const numberOfRaces = document.getElementById('numberOfRaces').value;
-    let url = 'http://127.0.0.1:8888/api/'+interfaceName+'?';
+    let url = `http://127.0.0.1:8888/api/${interfaceName}?page=${page}&pageSize=${pageSize}`;
 
     if (wxNickName.trim() !== '') {
         url += `&wxNickName=${wxNickName}`;
@@ -13,9 +16,6 @@ function fetchComments(interfaceName) {
     if (numberOfRaces.trim() !== '') {
         url += `&number=${numberOfRaces}`;
     }
-
-// 去掉第一个参数的 &
-    url = url.replace('?&', '?');
 
     fetch(url)
         .then(response => response.json())
@@ -29,9 +29,14 @@ function fetchComments(interfaceName) {
 
 function displayComments(comments) {
     const tableBody = document.getElementById('commentsBody');
-    tableBody.innerHTML = '';
+    let totalCount = comments.total;
+    let pageSize = comments.pageSize;
+    let totalPages = Math.ceil(totalCount / pageSize);
 
-    comments.forEach(comment => {
+    tableBody.innerHTML = '';
+    document.getElementById('totalPages').textContent = totalPages;
+
+    comments.data.forEach(comment => {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${comment.WxNickName}</td>
@@ -42,4 +47,27 @@ function displayComments(comments) {
         `;
         tableBody.appendChild(row);
     });
+}
+
+
+function previousPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        fetchComments('comments', currentPage, pageSize);
+        document.getElementById('currentPage').textContent = currentPage;
+    }
+}
+
+function nextPage() {
+    // 这里需要根据实际情况判断是否还有下一页
+    currentPage++;
+    fetchComments('comments', currentPage, pageSize);
+    document.getElementById('currentPage').textContent = currentPage;
+}
+
+function changePageSize() {
+    pageSize = parseInt(document.getElementById('pageSize').value);
+    currentPage = 1; // 切换每页大小后，回到第一页
+    fetchComments('comments', currentPage, pageSize);
+    document.getElementById('currentPage').textContent = currentPage;
 }

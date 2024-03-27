@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func StartApiServer() {
@@ -24,6 +25,19 @@ func StartApiServer() {
 			log.Fatalf("Error initializing database: %v", err)
 		}
 		var comments []db.Comment
+		var totalCount int64
+
+		// 解析页码和每页条目数量，默认为第一页，每页显示10条
+		page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
+		if err != nil || page < 1 {
+			page = 1
+		}
+		pageSize, err := strconv.Atoi(c.DefaultQuery("pageSize", "20"))
+		if err != nil || pageSize < 1 {
+			pageSize = 20
+		}
+		offset := (page - 1) * pageSize
+
 		query := db.DB.Debug()
 		if wxNickName := c.Query("wxNickName"); wxNickName != "" {
 			query = query.Where("wx_nick_name LIKE ?", "%"+wxNickName+"%")
@@ -40,9 +54,24 @@ func StartApiServer() {
 		if endTime := c.Query("endTime"); endTime != "" {
 			query = query.Where("create_time <= ?", endTime)
 		}
-		query.Find(&comments)
-		c.JSON(http.StatusOK, comments)
+
+		// 获取总记录数
+		query.Model(&db.Comment{}).Count(&totalCount)
+
+		// 查询分页数据
+		query.Offset(offset).Limit(pageSize).Find(&comments)
+
+		// 构造响应数据，包括总记录数和分页数据
+		responseData := map[string]interface{}{
+			"total":    totalCount,
+			"page":     page,
+			"pageSize": pageSize,
+			"data":     comments,
+		}
+
+		c.JSON(http.StatusOK, responseData)
 	})
+
 	//评论统计接口
 	r.GET("/api/static", func(c *gin.Context) {
 		groupType := c.Query("groupType")

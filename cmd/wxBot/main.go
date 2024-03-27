@@ -31,27 +31,8 @@ func RunBot() {
 	_ = bot.Block() // 阻塞主goroutine, 直到发生异常或者用户主动退出
 }
 func main() {
-	go RunBot()
+	//go RunBot()
 	go server.StartApiServer()
 	go server.StartWebServer()
 	select {}
-	//// 启动API服务
-	//wg.Add(1)
-	//go func() {
-	//	defer wg.Done()
-	//	server.StartApiServer()
-	//}()
-	//// 运行微信机器人
-	//wg.Add(1)
-	//go func() {
-	//	defer wg.Done()
-	//	RunBot()
-	//}()
-	//// 运行前端页面
-	//wg.Add(1)
-	//go func() {
-	//	defer wg.Done()
-	//	server.StartWebServer()
-	//}()
-	//wg.Wait() // 等待所有goroutine完成
 }

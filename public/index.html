@@ -6,7 +6,7 @@
     <title>评论展示</title>
     <link rel="stylesheet" href="css/comment.css">
 </head>
-<body onload="fetchComments('comments')">
+<body onload="fetchComments('comments',1,10)">
 <div class="container">
 
     <div class="toggleTab">
@@ -24,20 +24,34 @@
         <input type="number" id="numberOfRaces">
         <button onclick="fetchComments('comments')">查询</button>
     </div>
-    <table id="commentsTable">
-        <thead>
-        <tr>
-            <th>微信昵称</th>
-            <th>比赛届数</th>
-            <th>小说标题</th>
-            <th>评论内容</th>
-            <th>评论时间</th>
-        </tr>
-        </thead>
-        <tbody id="commentsBody">
-        <!-- Comments will be inserted here -->
-        </tbody>
-    </table>
+    <div id = "table-container">
+        <table id="commentsTable">
+            <thead>
+            <tr>
+                <th>微信昵称</th>
+                <th>比赛届数</th>
+                <th>小说标题</th>
+                <th>评论内容</th>
+                <th>评论时间</th>
+            </tr>
+            </thead>
+            <tbody id="commentsBody">
+            <!-- Comments will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination">
+        <button onclick="previousPage()">上一页</button>
+        <span id="currentPage">1</span>
+        <button onclick="nextPage()">下一页</button>
+        <select id="pageSize" onchange="changePageSize()">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+        <span id="totalPages">1</span>
+    </div>
 </div>
 <script src="js/comment.js"></script>
 </body>

@@ -7,13 +7,13 @@
 }
 
 .tabButton {
-    padding: 10px 20px;
+    padding: 10px 10px;
     background-color: #007bff;
     color: #fff;
     border: none;
     border-radius: 20px; /* 圆角 */
     cursor: pointer;
-    margin: 0 10px; /* 按钮间距 */
+    margin: 0 40px; /* 按钮间距 */
     transition: background-color 0.3s ease;
 }
 
@@ -51,7 +51,7 @@
 }
 
 .sort-buttons {
-    margin-left: 10px; /* 左侧间距 */
+    margin-left: 10px;
 }
 
 .sort-buttons button {
@@ -65,6 +65,9 @@
 
 .sort-buttons button:hover {
     background-color: #218838;
+}
+.result-buttons{
+    margin-left: 10px; /* 左侧间距 */
 }
 .tables-container {
     display: flex;

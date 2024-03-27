@@ -7,13 +7,13 @@
 }
 
 .tabButton {
-    padding: 10px 20px;
+    padding: 10px 10px;
     background-color: #007bff;
     color: #fff;
     border: none;
     border-radius: 20px; /* 圆角 */
     cursor: pointer;
-    margin: 0 10px; /* 按钮间距 */
+    margin: 0 40px; /* 按钮间距 */
     transition: background-color 0.3s ease;
 }
 
@@ -28,6 +28,7 @@
     align-items: center;
     justify-content: center; /* 将内容水平居中 */
     margin-bottom: 20px; /* 底部间距 */
+
 }
 
 .search label {

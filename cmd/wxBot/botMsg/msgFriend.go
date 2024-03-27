@@ -33,11 +33,11 @@ func OnFriend(dispatcher *openwechat.MessageMatchDispatcher) {
 		friendIds := config.LoadConfig().FriendIds
 		needParseMsg := friendIds == "" || u_str.Contains(friendIds, name)
 		if needParseMsg {
-			if ctx.Content == "开启" {
+			if ctx.Content == "开启匪帮机器人" {
 				config.BotEnable = 1
 				ctx.ReplyText(fmt.Sprintf("匪帮评论收集机器人已开启: %d", config.BotEnable))
 			}
-			if ctx.Content == "关闭" {
+			if ctx.Content == "关闭匪帮机器人" {
 				config.BotEnable = 0
 				ctx.ReplyText(fmt.Sprintf("匪帮评论收集机器人已关闭: %d", config.BotEnable))
 			}

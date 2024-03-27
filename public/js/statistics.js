@@ -73,7 +73,8 @@ function displayDataByNickName(comments, limit, groupType) {
             const endIndex = Math.min(startIndex + limit, comments.length);
             displayCurrentPageData(comments, startIndex, endIndex, tableBody,1);
         };
-
+        // 添加样式类名以便于CSS样式控制
+        button.className = 'pagination-button';
         paginationDiv.appendChild(button);
     }
 }
@@ -114,7 +115,8 @@ function displayDataByNovelTitle(comments, limit, groupType) {
             const endIndex = Math.min(startIndex + limit, comments.length);
             displayCurrentPageData(comments, startIndex, endIndex, tableBody,2);
         };
-
+        // 添加样式类名以便于CSS样式控制
+        button.className = 'pagination-button';
         paginationDiv.appendChild(button);
     }
 }
@@ -155,7 +157,8 @@ function displayDataByNumber(comments, limit, groupType) {
             const endIndex = Math.min(startIndex + limit, comments.length);
             displayCurrentPageData(comments, startIndex, endIndex, tableBody,3);
         };
-
+        // 添加样式类名以便于CSS样式控制
+        button.className = 'pagination-button';
         paginationDiv.appendChild(button);
     }
 }

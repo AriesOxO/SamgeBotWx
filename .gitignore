@@ -3,4 +3,5 @@
 tmp/wxBotCache
 qodana.yaml
 config.json
-vue-comment-static/node_modules/
+wxbot
+wxbot.db

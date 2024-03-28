@@ -106,8 +106,8 @@ func FindCommentByCondition(wxNickName string, number int, novelTitle string) (*
 }
 
 // 根据唯一的 WxID 删除评论数据
-func DeleteCommentByWxID(wxID string) error {
-	result := DB.Delete(&Comment{}, "wx_id = ?", wxID)
+func DeleteCommentByWxID(msgId string) error {
+	result := DB.Delete(&Comment{}, "msg_id = ?", msgId)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -115,9 +115,9 @@ func DeleteCommentByWxID(wxID string) error {
 }
 
 // 根据唯一的 WxID 查询评论数据
-func GetCommentByWxID(wxID string) (*Comment, error) {
+func GetCommentByWxID(msgId string) (*Comment, error) {
 	comment := &Comment{}
-	result := DB.Where("wx_id = ?", wxID).First(comment)
+	result := DB.Where("msg_id = ?", msgId).First(comment)
 	if result.Error != nil {
 		return nil, result.Error
 	}

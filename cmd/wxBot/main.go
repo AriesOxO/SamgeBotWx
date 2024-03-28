@@ -31,7 +31,7 @@ func RunBot() {
 	_ = bot.Block() // 阻塞主goroutine, 直到发生异常或者用户主动退出
 }
 func main() {
-	go RunBot()
+	/*go RunBot()*/
 	go server.StartApiServer()
 	go server.StartWebServer()
 	select {}

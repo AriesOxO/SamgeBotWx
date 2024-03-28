@@ -82,11 +82,11 @@ func StartApiServer() {
 		condition := "1=1"
 
 		if wxNickName != "" {
-			condition += " AND wxNickName = '" + wxNickName + "'"
+			condition += " AND wx_nick_name LIKE '%" + wxNickName + "%'"
 		}
 
 		if novelTitle != "" {
-			condition += " AND novelTitle = '" + novelTitle + "'"
+			condition += " AND novel_title LIKE '%" + novelTitle + "%'"
 		}
 
 		if number != "" {

@@ -3,3 +3,5 @@
 tmp/wxBotCache
 qodana.yaml
 config.json
+wxbot
+wxbot.db

@@ -11,6 +11,10 @@ import (
 	"sync"
 )
 
+var NumberOfRaces int = 18
+var BotEnable int = 1
+var superPwd string = "密码就是我不告诉你"
+
 const (
 	BotCacheDir      = "tmp/wxBotCache/botCacheFile"
 	BotLogDir        = "tmp/wxBotCache/botLog"
@@ -74,6 +78,8 @@ type Configuration struct {
 	FriendIds    string `json:"friend_ids"`
 	ManagerIds   string `json:"manager_ids"`
 	MineNickname string `json:"mine_nickname"`
+	WebPort      string `json:"web_port"`
+	SqliteUrl    string `json:"sql_ite_url"`
 	EnableReply  bool   `json:"enable_reply"`
 }
 
@@ -100,6 +106,8 @@ func LoadConfig() *Configuration {
 			FriendIds:    "",
 			ManagerIds:   "",
 			MineNickname: "",
+			WebPort:      "8887",
+			SqliteUrl:    "./webot.db",
 			EnableReply:  true,
 		}
 

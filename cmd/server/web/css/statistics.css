@@ -1,0 +1,133 @@
+
+.toggleTab {
+    transform: scale(1.2);
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tabButton {
+    padding: 10px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px; /* 圆角 */
+    cursor: pointer;
+    margin: 0 40px; /* 按钮间距 */
+    transition: background-color 0.3s ease;
+}
+
+.tabButton:hover {
+    background-color: #0056b3;
+}
+
+
+.search {
+    transform: scale(1.2);
+    display: flex;
+    align-items: center;
+    justify-content: center; /* 将内容水平居中 */
+    margin-bottom: 20px; /* 底部间距 */
+}
+
+.search label {
+    margin-right: 5px;
+}
+
+.search input {
+    margin-right: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.search button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.sort-buttons {
+    margin-left: 10px;
+}
+
+.sort-buttons button {
+    padding: 5px 10px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.sort-buttons button:hover {
+    background-color: #218838;
+}
+.result-buttons{
+    margin-left: 10px; /* 左侧间距 */
+}
+.tables-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 40px;
+    margin-top: 70px; /* 添加上边距 */
+}
+
+.table-wrapper {
+    flex: 1;
+    margin: 0 100px; /* Adjust spacing between tables */
+}
+
+/* 为表格添加分界线 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd; /* 在行之间添加分界线 */
+    border-right: 1px solid #ddd; /* 在列之间添加分界线 */
+}
+
+th {
+    background-color: #f2f2f2;
+    border-right: 1px solid #ddd; /* 在列之间添加分界线 */
+}
+
+/* 将分页显示改为蓝色 */
+.pagination {
+    width: 100%;
+    padding: 10px 0; /* 添加内边距以改善间距 */
+    text-align: center; /* 将页码居中显示 */
+}
+
+/* 为按钮添加样式 */
+.pagination-button {
+    background-color: #b3d4fc; /* 设置蓝色背景 */
+    color: #000; /* 设置黑色字体 */
+    padding: 8px 12px; /* 为按钮添加内边距 */
+    margin: 0 5px; /* 添加按钮之间的间距 */
+    cursor: pointer; /* 添加指针样式 */
+    border-radius: 50%; /* 圆形按钮 */
+    border: none; /* 移除边框 */
+}
+
+.pagination-button:hover {
+    background-color: #007bff; /* 鼠标悬停时改变背景色 */
+}
+.tableSpan {
+    display: block;
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 15px; /* 下边距为15px */
+
+}
+
+

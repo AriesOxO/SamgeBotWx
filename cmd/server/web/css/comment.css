@@ -1,0 +1,164 @@
+
+.toggleTab {
+    transform: scale(1.2);
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tabButton {
+    padding: 10px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px; /* 圆角 */
+    cursor: pointer;
+    margin: 0 40px; /* 按钮间距 */
+    transition: background-color 0.3s ease;
+}
+
+.tabButton:hover {
+    background-color: #0056b3;
+}
+
+
+.search {
+    transform: scale(1.2);
+    display: flex;
+    align-items: center;
+    justify-content: center; /* 将内容水平居中 */
+    margin-bottom: 20px; /* 底部间距 */
+
+}
+
+.search label {
+    margin-right: 5px;
+}
+
+.search input {
+    margin-right: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.search button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.sort-buttons {
+    margin-left: 10px; /* 左侧间距 */
+}
+
+.sort-buttons button {
+    padding: 5px 10px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.sort-buttons button:hover {
+    background-color: #218838;
+}
+
+/* 包裹容器居中显示 */
+.table-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+}
+
+/* 表格样式 */
+#commentsTable {
+    width: 80%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 0 auto; /* 将左右边距设置为自动以实现居中 */
+    border: 1px solid #ddd; /* 表格外边框 */
+}
+
+#commentsTable th,
+#commentsTable td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd; /* 每行底部边框 */
+    border-right: 1px solid #ddd; /* 每列右侧边框 */
+    text-align: center;
+}
+
+#commentsTable th {
+    background-color: #d9edf7; /* 浅蓝色 */
+    font-weight: bold;
+    border-top: 1px solid #ddd; /* 表头顶部边框 */
+}
+
+#commentsTable td {
+    background-color: #ffffff; /* 白色 */
+}
+
+/* 为每个表头单元格设置固定宽度 */
+#commentsTable th:nth-child(1),
+#commentsTable th:nth-child(2),
+#commentsTable th:nth-child(3),
+#commentsTable th:nth-child(5) {
+    width: 10%; /* 根据需要调整宽度 */
+}
+
+#commentsTable th:nth-child(4) {
+    width: 50%; /* 根据需要调整宽度 */
+}
+
+/* 交替行颜色 */
+#commentsTable tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* 悬停效果 */
+#commentsTable tbody tr:hover {
+    background-color: #e6f7ff;
+}
+
+.pagination {
+    transform: scale(1.2);
+    margin-top: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 添加轻微阴影 */
+}
+
+.pagination button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* 添加背景色过渡效果 */
+}
+
+.pagination button:hover {
+    background-color: #0056b3; /* 鼠标悬停时的背景色 */
+}
+
+.pagination select {
+    padding: 5px;
+    margin: 0 5px;
+    border: 1px solid #ddd; /* 添加边框 */
+    border-radius: 3px; /* 统一边框圆角 */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* 添加轻微阴影 */
+}
+
+.pagination span {
+    border: 1px solid #ddd; /* 添加边框 */
+    border-radius: 3px; /* 统一边框圆角 */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* 添加轻微阴影 */
+    margin: 0 5px;
+    font-weight: bold; /* 增加字体粗细 */
+}
+

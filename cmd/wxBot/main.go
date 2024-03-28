@@ -3,6 +3,7 @@ package main
 // 文档：https://github.com/eatmoreapple/openwechat
 
 import (
+	"SamgeWxApi/cmd/server"
 	config "SamgeWxApi/cmd/utils/u_config"
 	"SamgeWxApi/cmd/wxBot/botHandler"
 	"SamgeWxApi/cmd/wxBot/botMsg"
@@ -29,7 +30,9 @@ func RunBot() {
 	botHandler.ParseGroups(self)
 	_ = bot.Block() // 阻塞主goroutine, 直到发生异常或者用户主动退出
 }
-
 func main() {
-	RunBot()
+	go RunBot()
+	go server.StartApiServer()
+	go server.StartWebServer()
+	select {}
 }

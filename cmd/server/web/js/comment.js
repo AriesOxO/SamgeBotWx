@@ -5,7 +5,7 @@ function fetchComments(interfaceName, page, pageSize) {
     const wxNickName = document.getElementById('wxNickName').value;
     const novelTitle = document.getElementById('novelTitle').value;
     const numberOfRaces = document.getElementById('numberOfRaces').value;
-    let url = `http://127.0.0.1:8888/api/${interfaceName}?page=${page}&pageSize=${pageSize}`;
+    let url = `http://114.55.235.157:8888/api/${interfaceName}?page=${page}&pageSize=${pageSize}`;
 
     if (wxNickName.trim() !== '') {
         url += `&wxNickName=${wxNickName}`;

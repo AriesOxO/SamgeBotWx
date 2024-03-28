@@ -1,6 +1,7 @@
 package db
 
 import (
+	config "SamgeWxApi/cmd/utils/u_config"
 	"fmt"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -31,7 +32,7 @@ var DB *gorm.DB
 
 func InitDB() error {
 	var err error
-	DB, err = gorm.Open(sqlite.Open("wxbot.db"), &gorm.Config{Logger: logger.Default.LogMode(logger.Error)})
+	DB, err = gorm.Open(sqlite.Open(config.LoadConfig().SqliteUrl), &gorm.Config{Logger: logger.Default.LogMode(logger.Error)})
 	if err != nil {
 		return err
 	}

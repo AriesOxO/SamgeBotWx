@@ -1,6 +1,7 @@
 package server
 
 import (
+	config "SamgeWxApi/cmd/utils/u_config"
 	"embed"
 	"io/fs"
 	"log"
@@ -17,7 +18,7 @@ func StartWebServer() {
 	http.Handle("/", http.StripPrefix("/", fs))
 	// 启动服务器
 	log.Println("Starting web server on :8887")
-	if err := http.ListenAndServe(":8887", nil); err != nil {
+	if err := http.ListenAndServe(config.LoadConfig().WebPort, nil); err != nil {
 		log.Fatalf("Failed to start web server: %v", err)
 	}
 }

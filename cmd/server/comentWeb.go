@@ -17,8 +17,8 @@ func StartWebServer() {
 	fs := http.FileServer(http.FS(web))
 	http.Handle("/", http.StripPrefix("/", fs))
 	// 启动服务器
-	log.Println("Starting web server on :8887")
-	if err := http.ListenAndServe(config.LoadConfig().WebPort, nil); err != nil {
+	log.Println("Starting web server on :" + config.LoadConfig().WebPort)
+	if err := http.ListenAndServe(":"+config.LoadConfig().WebPort, nil); err != nil {
 		log.Fatalf("Failed to start web server: %v", err)
 	}
 }

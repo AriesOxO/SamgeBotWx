@@ -74,13 +74,14 @@ type Configuration struct {
 	PresencePenalty  float32 `json:"presence_penalty"`
 	FrequencyPenalty float32 `json:"frequency_penalty"`
 
-	GroupIds     string `json:"group_ids"`
-	FriendIds    string `json:"friend_ids"`
-	ManagerIds   string `json:"manager_ids"`
-	MineNickname string `json:"mine_nickname"`
-	WebPort      string `json:"web_port"`
-	SqliteUrl    string `json:"sql_ite_url"`
-	EnableReply  bool   `json:"enable_reply"`
+	GroupIds      string `json:"group_ids"`
+	FriendIds     string `json:"friend_ids"`
+	ManagerIds    string `json:"manager_ids"`
+	MineNickname  string `json:"mine_nickname"`
+	WebPort       string `json:"web_port"`
+	SqliteUrl     string `json:"sql_ite_url"`
+	CommentGroups string `json:"comment_groups"`
+	EnableReply   bool   `json:"enable_reply"`
 }
 
 var config *Configuration
@@ -101,14 +102,13 @@ func LoadConfig() *Configuration {
 			TopP:             1,
 			FrequencyPenalty: 0.0,
 			PresencePenalty:  0.6,
-
-			GroupIds:     "",
-			FriendIds:    "",
-			ManagerIds:   "",
-			MineNickname: "",
-			WebPort:      "8887",
-			SqliteUrl:    "./webot.db",
-			EnableReply:  true,
+			GroupIds:         "",
+			FriendIds:        "",
+			ManagerIds:       "",
+			MineNickname:     "",
+			WebPort:          "8887",
+			SqliteUrl:        "./webot.db",
+			EnableReply:      true,
 		}
 
 		// 判断配置文件是否存在，存在直接JSON读取

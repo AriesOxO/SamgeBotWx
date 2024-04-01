@@ -6,6 +6,7 @@ import (
 	"SamgeWxApi/cmd/wxBot/botUtil"
 	"fmt"
 	"github.com/eatmoreapple/openwechat"
+	"strings"
 )
 
 // ParseMessage 注册消息处理函数
@@ -24,7 +25,16 @@ func regDispatcher(dispatcher *openwechat.MessageMatchDispatcher) {
 	//OnUser(dispatcher)
 	//OnFriendByNickName(dispatcher, "")
 	//OnFriendByRemarkName(dispatcher, "")
-	OnGroupByGroupName(dispatcher, "匪帮")
+	//根据配置动态注册，格式A|B|C
+	parts := strings.Split(config.Configuration{}.CommentGroups, "|")
+	if len(parts) < 1 {
+		fmt.Println("未配置监听群组")
+	} else {
+		for _, part := range parts {
+			OnGroupByGroupName(dispatcher, part)
+			fmt.Println("已监听配置群组：" + part)
+		}
+	}
 	//OnUserMp(dispatcher) // 自定义监听公众号类型消息
 
 	// 按消息类型区分处理。目前不采用这种方式，因为不同类型可以用工具类对msg统一区分处理

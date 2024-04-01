@@ -26,7 +26,7 @@ func regDispatcher(dispatcher *openwechat.MessageMatchDispatcher) {
 	//OnFriendByNickName(dispatcher, "")
 	//OnFriendByRemarkName(dispatcher, "")
 	//根据配置动态注册，格式A|B|C
-	parts := strings.Split(config.Configuration{}.CommentGroups, "|")
+	parts := strings.Split(config.LoadConfig().CommentGroups, "|")
 	if len(parts) < 1 {
 		fmt.Println("未配置监听群组")
 	} else {

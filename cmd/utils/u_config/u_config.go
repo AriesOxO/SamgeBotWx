@@ -11,7 +11,7 @@ import (
 	"sync"
 )
 
-var NumberOfRaces int = 18
+var NumberOfRaces int = 999
 var BotEnable int = 1
 var superPwd string = "密码就是我不告诉你"
 

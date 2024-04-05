@@ -123,3 +123,12 @@ func GetCommentByWxID(msgId string) (*Comment, error) {
 	}
 	return comment, nil
 }
+
+func FindUniqueComment(wxNickName string, number int, novelTitle string) (*Comment, error) {
+	comment := &Comment{}
+	result := DB.Where("wx_nick_name = ? AND number = ? AND novel_title = ?", wxNickName, number, novelTitle).First(comment)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return comment, nil
+}

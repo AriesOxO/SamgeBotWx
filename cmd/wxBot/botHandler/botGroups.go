@@ -56,8 +56,17 @@ func FeiBang(ctx *openwechat.MessageContext) {
 			CreateTime:  time.Now().Format(time.DateTime),
 			UpdateTime:  time.Now().Format(time.DateTime),
 		}
-		db.CreateComment(newComment)
-		ctx.ReplyText("感谢评论,已收录@" + sender.NickName)
+		if comment, err := db.FindCommentByCondition(sender.NickName, config.NumberOfRaces, matches[2]); err == nil && comment != nil {
+			ctx.ReplyText("感谢评论，你已经评论过了，少爷我只收一次哦@" + sender.NickName)
+		} else {
+			if err := db.CreateComment(newComment); err == nil {
+				ctx.ReplyText("感谢评论，已收录@" + sender.NickName)
+			} else {
+				// 处理创建评论时的错误
+				ctx.ReplyText("抱歉，少爷我没匹配到评论@" + sender.NickName)
+			}
+		}
+
 	}
 	if ctx.IsRecalled() {
 		if err := db.InitDB(); err != nil {

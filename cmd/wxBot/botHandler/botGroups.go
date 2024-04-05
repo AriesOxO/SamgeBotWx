@@ -36,7 +36,7 @@ func FeiBang(ctx *openwechat.MessageContext) {
 			return
 		}
 		// 使用正则表达式解析消息
-		re := regexp.MustCompile(`@(.+?)\s*(《.+?》)\s*(.+)`)
+		re := regexp.MustCompile(`@(.+?)\s*(《.+?》)\s*([\s\S]+)`)
 		matches := re.FindStringSubmatch(msgContent)
 		if len(matches) <= 2 {
 			ctx.ReplyText("评论格式错误，请参考格式@少爷《小说名字》评论内容@" + sender.NickName)

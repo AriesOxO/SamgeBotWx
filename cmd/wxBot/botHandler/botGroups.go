@@ -27,10 +27,10 @@ func FeiBang(ctx *openwechat.MessageContext) {
 		ctx.ReplyText("拍本少爷干嘛！去读书！去码字！去谈恋爱哇Q_Q")
 	}
 	msgContent := ctx.Content
-	if strings.Contains(msgContent, "」\n- - - - - - - - - - - - - - -\n") {
-		return
-	}
 	if ctx.IsAt() {
+		if strings.Contains(msgContent, "」\n- - - - - - - - - - - - - - -\n") {
+			return
+		}
 		if err := db.InitDB(); err != nil {
 			log.Fatalf("Error initializing database: %v", err)
 		}

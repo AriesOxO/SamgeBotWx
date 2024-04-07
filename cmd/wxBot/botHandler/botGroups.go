@@ -8,6 +8,7 @@ import (
 	"log"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -45,6 +46,9 @@ func FeiBang(ctx *openwechat.MessageContext) {
 
 		if len(matches[3]) < 30 {
 			ctx.ReplyText("评论内容过少，本少爷不收@" + sender.NickName)
+			return
+		}
+		if strings.Contains(msgContent, "」 - - - - - - - - - - - - - - -") {
 			return
 		}
 		newComment := &db.Comment{

@@ -27,6 +27,9 @@ func FeiBang(ctx *openwechat.MessageContext) {
 		ctx.ReplyText("拍本少爷干嘛！去读书！去码字！去谈恋爱哇Q_Q")
 	}
 	msgContent := ctx.Content
+	if strings.Contains(msgContent, "- - - - - - - - - - - - - - - ") {
+		return
+	}
 	if ctx.IsAt() {
 		if err := db.InitDB(); err != nil {
 			log.Fatalf("Error initializing database: %v", err)
@@ -48,7 +51,7 @@ func FeiBang(ctx *openwechat.MessageContext) {
 			ctx.ReplyText("评论内容过少，本少爷不收@" + sender.NickName)
 			return
 		}
-		if strings.Contains(msgContent, "」 - - - - - - - - - - - - - - -") {
+		if strings.Contains(matches[3], "- - - - - - - - - - - - - - - ") {
 			return
 		}
 		newComment := &db.Comment{
@@ -85,7 +88,7 @@ func FeiBang(ctx *openwechat.MessageContext) {
 			return
 		}
 		if comment != nil && len(comment.WxNickName) > 0 {
-			ctx.ReplyText("评论消息测回,收录评论已删除@" + comment.WxNickName + "请重新评论哦QvQ")
+			ctx.ReplyText("评论消息撤回,收录评论已删除@" + comment.WxNickName + "请重新评论哦QvQ")
 			db.DeleteCommentByWxID(strconv.FormatInt(msgId, 10))
 		}
 	}

@@ -3,6 +3,7 @@ package botHandler
 import (
 	"SamgeWxApi/cmd/server/db"
 	config "SamgeWxApi/cmd/utils/u_config"
+	strutil "SamgeWxApi/cmd/utils/u_str"
 	"fmt"
 	"github.com/eatmoreapple/openwechat"
 	"log"
@@ -47,7 +48,7 @@ func FeiBang(ctx *openwechat.MessageContext) {
 			return
 		}
 
-		if len(matches[3]) < 30 {
+		if strutil.GetStrLength(matches[3]) < 30 {
 			ctx.ReplyText("评论内容过少，本少爷不收@" + sender.NickName)
 			return
 		}

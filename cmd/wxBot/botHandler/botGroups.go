@@ -3,11 +3,13 @@ package botHandler
 import (
 	"SamgeWxApi/cmd/server/db"
 	config "SamgeWxApi/cmd/utils/u_config"
+	strutil "SamgeWxApi/cmd/utils/u_str"
 	"fmt"
 	"github.com/eatmoreapple/openwechat"
 	"log"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -27,6 +29,9 @@ func FeiBang(ctx *openwechat.MessageContext) {
 	}
 	msgContent := ctx.Content
 	if ctx.IsAt() {
+		if strings.Contains(msgContent, "」\n- - - - - - - - - - - - - - -\n") {
+			return
+		}
 		if err := db.InitDB(); err != nil {
 			log.Fatalf("Error initializing database: %v", err)
 		}
@@ -36,14 +41,14 @@ func FeiBang(ctx *openwechat.MessageContext) {
 			return
 		}
 		// 使用正则表达式解析消息
-		re := regexp.MustCompile(`@(.+?)\s*(《.+?》)\s*(.+)`)
+		re := regexp.MustCompile(`@(.+?)\s*(《.+?》)\s*([\s\S]+)`)
 		matches := re.FindStringSubmatch(msgContent)
 		if len(matches) <= 2 {
 			ctx.ReplyText("评论格式错误，请参考格式@少爷《小说名字》评论内容@" + sender.NickName)
 			return
 		}
 
-		if len(matches[3]) < 30 {
+		if strutil.GetStrLength(matches[3]) < 30 {
 			ctx.ReplyText("评论内容过少，本少爷不收@" + sender.NickName)
 			return
 		}
@@ -56,8 +61,17 @@ func FeiBang(ctx *openwechat.MessageContext) {
 			CreateTime:  time.Now().Format(time.DateTime),
 			UpdateTime:  time.Now().Format(time.DateTime),
 		}
-		db.CreateComment(newComment)
-		ctx.ReplyText("感谢评论,已收录@" + sender.NickName)
+		if comment, err := db.FindCommentByCondition(sender.NickName, config.NumberOfRaces, matches[2]); err == nil && comment != nil {
+			ctx.ReplyText("感谢评论，你已经评论过了，少爷我只收一次哦@" + sender.NickName)
+		} else {
+			if err := db.CreateComment(newComment); err == nil {
+				ctx.ReplyText("感谢评论，已收录@" + sender.NickName)
+			} else {
+				// 处理创建评论时的错误
+				ctx.ReplyText("抱歉，少爷我没匹配到评论@" + sender.NickName)
+			}
+		}
+
 	}
 	if ctx.IsRecalled() {
 		if err := db.InitDB(); err != nil {
@@ -72,7 +86,7 @@ func FeiBang(ctx *openwechat.MessageContext) {
 			return
 		}
 		if comment != nil && len(comment.WxNickName) > 0 {
-			ctx.ReplyText("评论消息测回,收录评论已删除@" + comment.WxNickName + "请重新评论哦QvQ")
+			ctx.ReplyText("评论消息撤回,收录评论已删除@" + comment.WxNickName + "请重新评论哦QvQ")
 			db.DeleteCommentByWxID(strconv.FormatInt(msgId, 10))
 		}
 	}

@@ -1,8 +1,11 @@
 package u_str
 
 import (
+	"math"
+	"regexp"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 // Str2Int64 字符串转int64
@@ -43,4 +46,22 @@ func Contains(names, name string) bool {
 		}
 	}
 	return false
+}
+
+// GetStrLength 返回输入的字符串的字数，汉字和中文标点算 1 个字数，英文和其他字符 2 个算 1 个字数，不足 1 个算 1个
+func GetStrLength(str string) float64 {
+	if len(str) == 0 {
+		return 0
+	}
+	var total float64
+	reg := regexp.MustCompile("/·|，|。|《|》|‘|’|”|“|；|：|【|】|？|（|）|、/")
+	for _, r := range str {
+		if unicode.Is(unicode.Scripts["Han"], r) || reg.Match([]byte(string(r))) {
+			total = total + 1
+		} else {
+			total = total + 0.5
+		}
+	}
+
+	return math.Ceil(total)
 }

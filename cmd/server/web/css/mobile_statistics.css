@@ -67,7 +67,7 @@ button {
 
 .table-wrapper {
     width: 30%; /* 控制表格容器宽度 */
-    margin-bottom: 20px; /* 增加表格容器底部间距 */
+    margin-bottom: 10px; /* 增加表格容器底部间距 */
 }
 
 .tableSpan {
@@ -85,9 +85,9 @@ table {
 
 table th,
 table td {
-    padding: 5px;
+    padding: 2px;
     border-bottom: 1px solid #ccc;
-    text-align: center;
+    text-align: left;
 }
 
 /* 添加表格边框 */

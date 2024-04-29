@@ -4,22 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>评论统计</title>
-    <link rel="stylesheet" href="css/statistics.css">
+    <link rel="stylesheet" type="text/css" href="css/mobile_statistics.css" media="screen and (max-width:1200px)"/>
+    <link rel="stylesheet" type="text/css" href="css/pc_statistics.css" media="screen and (min-width:1201px)"/>
 </head>
-<body onload ="fetchComments('static', 1, 20)">
+<body onload ="fetchComments('static', 2, 20)">
 <div class="container">
     <div class="toggleTab">
         <button onclick="window.location.href='index.html'" class="tabButton">评论展示</button>
         <button onclick="window.location.href='static.html'" class="tabButton">评论统计</button>
     </div>
-
     <div class="search">
-        <label for="wxNickName">微信昵称:</label>
-        <input type="text" id="wxNickName">
-        <label for="novelTitle">小说标题:</label>
-        <input type="text" id="novelTitle">
-        <label for="novelTitle">比赛届数:</label>
-        <input type="number" id="numberOfRaces">
+        <div>
+            <label for="wxNickName">微信昵称:</label>
+            <input type="text" id="wxNickName">
+        </div>
+        <div>
+            <label for="novelTitle">小说标题:</label>
+            <input type="text" id="novelTitle">
+        </div>
+        <div>
+            <label for="novelTitle">比赛届数:</label>
+            <input type="number" id="numberOfRaces">
+        </div>
         <div class="sort-buttons">
             <button onclick="fetchComments('static', 1, 20)">升序</button>
             <button onclick="fetchComments('static', 2, 20)">倒序</button>
@@ -35,8 +41,8 @@
             <table id="statisticsByNickNameTable">
                 <thead>
                 <tr>
-                    <th>评论者（微信昵称）</th>
-                    <th>评论数量</th>
+                    <th>昵称</th>
+                    <th>数量</th>
                 </tr>
                 </thead>
                 <tbody id="statisticsByNickNameBody">
@@ -52,8 +58,8 @@
             <table id="statisticsByNovelTitleTable">
                 <thead>
                 <tr>
-                    <th>小说名称</th>
-                    <th>评论数量</th>
+                    <th>名称</th>
+                    <th>数量</th>
                 </tr>
                 </thead>
                 <tbody id="statisticsByNovelTitleBody">
@@ -69,8 +75,8 @@
             <table id="statisticsByNumber">
                 <thead>
                 <tr>
-                    <th>小说届数</th>
-                    <th>评论数量</th>
+                    <th>届数</th>
+                    <th>数量</th>
                 </tr>
                 </thead>
                 <tbody id="statisticsByNumberBody">

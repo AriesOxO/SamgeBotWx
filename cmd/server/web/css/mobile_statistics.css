@@ -1,0 +1,125 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 1px;
+    padding: 1px 1px;
+    font-size: 12px; /* 调整表格字体大小 */
+}
+
+.container {
+    padding: 10px;
+    max-width: 100%; /* 限制容器宽度 */
+    margin: 0 auto; /* 水平居中 */
+}
+
+.toggleTab {
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+.tabButton {
+    padding: 5px 5px;
+    background-color: green; /* 改为绿色 */
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-right: 20px;
+    font-size: 12px; /* 调整按钮字体大小 */
+}
+
+.search {
+    margin-bottom: 10px; /* 增加搜索组件底部间距 */
+}
+
+.search div {
+    margin-bottom: 10px; /* 减小搜索组件的间距 */
+}
+
+label {
+    display: block;
+    margin-bottom: 2px;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 60%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 12px; /* 调整输入框字体大小 */
+}
+
+button {
+    padding: 5px 5px;
+    background-color: green; /* 改为绿色 */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px; /* 调整按钮字体大小 */
+}
+
+.tables-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.table-wrapper {
+    width: 30%; /* 控制表格容器宽度 */
+    margin-bottom: 10px; /* 增加表格容器底部间距 */
+}
+
+.tableSpan {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 添加表格阴影 */
+    border-top: 1px solid #ccc; /* 添加上边框 */
+}
+
+table th,
+table td {
+    padding: 2px;
+    border-bottom: 1px solid #ccc;
+    text-align: left;
+}
+
+/* 添加表格边框 */
+table th,
+table td {
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+
+.pagination {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.pagination button,
+.pagination select {
+    padding: 5px 5px;
+    background-color: green; /* 改为绿色 */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+    font-size: 12px; /* 调整按钮字体大小 */
+}
+
+.pagination select {
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+#currentPage,
+#totalPages {
+    font-weight: bold;
+}

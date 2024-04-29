@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>评论展示</title>
-    <link rel="stylesheet" href="css/comment.css">
+    <link rel="stylesheet" type="text/css" href="css/mobile_comment.css" media="screen and (max-width:1200px)"/>
+    <link rel="stylesheet" type="text/css" href="css/pc_comment.css" media="screen and (min-width:1201px)"/>
 </head>
 <body onload="fetchComments('comments',1,10)">
 <div class="container">
@@ -13,26 +14,30 @@
         <button onclick="window.location.href='index.html'" class="tabButton">评论展示</button>
         <button onclick="window.location.href='static.html'" class="tabButton">评论统计</button>
     </div>
-
-
     <div class="search">
-        <label for="wxNickName">微信昵称:</label>
-        <input type="text" id="wxNickName">
-        <label for="novelTitle">小说标题:</label>
-        <input type="text" id="novelTitle">
-        <label for="novelTitle">比赛届数:</label>
-        <input type="number" id="numberOfRaces">
+            <div>
+                <label for="wxNickName">微信昵称:</label>
+                <input type="text" id="wxNickName">
+            </div>
+            <div>
+                <label for="novelTitle">小说标题:</label>
+                <input type="text" id="novelTitle">
+            </div>
+            <div>
+                <label for="novelTitle">比赛届数:</label>
+                <input type="number" id="numberOfRaces">
+            </div>
         <button onclick="fetchComments('comments')">查询</button>
     </div>
     <div id="table-container">
         <table id="commentsTable">
             <thead>
             <tr>
-                <th>微信昵称</th>
-                <th>比赛届数</th>
-                <th>小说标题</th>
-                <th>评论内容</th>
-                <th>评论时间</th>
+                <th>昵称</th>
+                <th>届数</th>
+                <th>标题</th>
+                <th>内容</th>
+                <th>时间</th>
             </tr>
             </thead>
             <tbody id="commentsBody">

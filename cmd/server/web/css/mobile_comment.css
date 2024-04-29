@@ -1,0 +1,123 @@
+/* mobile_comment.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 1px;
+    padding: 1px 1px;
+    font-size: 12px; /* 调整表格字体大小 */
+}
+
+.container {
+    padding: 10px;
+    max-width: 100%; /* 限制容器宽度 */
+    margin: 0 auto; /* 水平居中 */
+}
+
+.toggleTab {
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+.tabButton {
+    padding: 5px 5px;
+    background-color: green; /* 改为绿色 */
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-right: 20px;
+    font-size: 12px; /* 调整表格字体大小 */
+}
+
+.search {
+    margin-bottom: 10px; /* 增加搜索组件底部间距 */
+}
+
+.search div {
+    margin-bottom: 10px; /* 减小搜索组件的间距 */
+}
+
+label {
+    display: block;
+    margin-bottom: 2px;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 60%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 5px 5px;
+    background-color: green; /* 改为绿色 */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px; /* 调整表格字体大小 */
+}
+
+#table-container {
+    overflow-x: auto;
+}
+
+#commentsTable {
+    width: 95%;
+    border-collapse: collapse;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+}
+
+#commentsTable th,
+#commentsTable td {
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+}
+
+/* 添加表格边框 */
+#commentsTable th,
+#commentsTable td {
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+
+.pagination {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.pagination button,
+.pagination select {
+    padding: 5px 5px;
+    background-color: green; /* 改为绿色 */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+    font-size: 12px; /* 调整表格字体大小 */
+}
+
+.pagination select {
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+#currentPage,
+#totalPages {
+    font-weight: bold;
+}
+
+/* 隐藏评论时间列 */
+#commentsTable th:nth-child(5),
+#commentsTable td:nth-child(5) {
+    display: none;
+}
+
+/* 隐藏比赛届数列 */
+#commentsTable th:nth-child(2),
+#commentsTable td:nth-child(2) {
+    display: none;
+}

@@ -6,7 +6,6 @@ import (
 	"SamgeWxApi/cmd/wxBot/botUtil"
 	"fmt"
 	"github.com/eatmoreapple/openwechat"
-	"strings"
 )
 
 // ParseMessage 注册消息处理函数
@@ -20,21 +19,21 @@ func ParseMessage(bot *openwechat.Bot) {
 func regDispatcher(dispatcher *openwechat.MessageMatchDispatcher) {
 	// 按对象类型区分处理：如 添加好友、群组、好友、自己、公众号、指定名称的群组/好友、自定义条件的用户
 	//OnFriendAdd(dispatcher)
-	OnFriend(dispatcher)
+	//OnFriend(dispatcher)
 	//OnGroup(dispatcher)
 	//OnUser(dispatcher)
 	//OnFriendByNickName(dispatcher, "")
-	//OnFriendByRemarkName(dispatcher, "")
-	//根据配置动态注册，格式A|B|C
-	parts := strings.Split(config.LoadConfig().CommentGroups, "|")
-	if len(parts) < 1 {
-		fmt.Println("未配置监听群组")
-	} else {
-		for _, part := range parts {
-			OnGroupByGroupName(dispatcher, part)
-			fmt.Println("已监听配置群组：" + part)
-		}
-	}
+	OnFriendByRemarkName(dispatcher, "林容敏")
+	////根据配置动态注册，格式A|B|C
+	//parts := strings.Split(config.LoadConfig().CommentGroups, "|")
+	//if len(parts) < 1 {
+	//	fmt.Println("未配置监听群组")
+	//} else {
+	//	for _, part := range parts {
+	//		OnGroupByGroupName(dispatcher, part)
+	//		fmt.Println("已监听配置群组：" + part)
+	//	}
+	//}
 	//OnUserMp(dispatcher) // 自定义监听公众号类型消息
 
 	// 按消息类型区分处理。目前不采用这种方式，因为不同类型可以用工具类对msg统一区分处理
@@ -110,7 +109,7 @@ func OnUser(dispatcher *openwechat.MessageMatchDispatcher) {
 // OnFriendByRemarkName 注册根据好友备注是否匹配的消息处理函数
 func OnFriendByRemarkName(dispatcher *openwechat.MessageMatchDispatcher, remarkName string) {
 	dispatcher.OnFriendByRemarkName(remarkName, func(ctx *openwechat.MessageContext) {
-		debugPrintMsg("OnFriendByRemarkName 注册根据好友备注是否匹配的消息处理函数", fmt.Sprintf("%s | %s", remarkName, getSenderNameAndRawContent(ctx)))
+		ctx.ReplyText("我在，我在，我一直都在的~")
 	})
 }
 
@@ -127,6 +126,7 @@ func OnGroupByGroupName(dispatcher *openwechat.MessageMatchDispatcher, groupName
 // OnFriendByNickName 注册根据好友昵称是否匹配的消息处理函数
 func OnFriendByNickName(dispatcher *openwechat.MessageMatchDispatcher, nickName string) {
 	dispatcher.OnFriendByNickName(nickName, func(ctx *openwechat.MessageContext) {
+		ctx.ReplyText("我在，我在，我一直都在的~")
 		//if ctx.Content == "开启" {
 		//	config.BotEnable = 1
 		//	ctx.ReplyText(fmt.Sprintf("匪帮评论收集机器人已开启: %d", config.BotEnable))

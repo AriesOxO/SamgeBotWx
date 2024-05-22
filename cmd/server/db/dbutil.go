@@ -13,6 +13,7 @@ import (
 type Comment struct {
 	ID          uint   `gorm:"primaryKey;autoIncrement"`
 	MsgId       string `gorm:"not null;column:msg_id"`
+	Pseudonym   string `gorm:"not null;column:pseudonym"`
 	WxNickName  string `gorm:"not null;column:wx_nick_name"`
 	Number      int    `gorm:"not null;column:number"`
 	NovelTitle  string `gorm:"not null;column:novel_title"`
@@ -96,9 +97,9 @@ func UpdateCommentByCondition(wxNickName string, number int, novelTitle, newComm
 	return nil
 }
 
-func FindCommentByCondition(wxNickName string, number int, novelTitle string) (*Comment, error) {
+func FindCommentByCondition(wxNickName string, number int, novelTitle string, pseudonym string) (*Comment, error) {
 	var comment Comment
-	result := DB.Where("wx_nick_name = ? AND number = ? AND novel_title = ?", wxNickName, number, novelTitle).First(&comment)
+	result := DB.Where("wx_nick_name = ? AND number = ? AND novel_title = ? AND pseudonym = ?", wxNickName, number, novelTitle, pseudonym).First(&comment)
 	if result.Error != nil {
 		return nil, result.Error
 	}

@@ -2,6 +2,7 @@ package server
 
 import (
 	"SamgeWxApi/cmd/server/db"
+	config "SamgeWxApi/cmd/utils/u_config"
 	"database/sql"
 	"fmt"
 	"github.com/gin-contrib/cors"
@@ -47,6 +48,8 @@ func StartApiServer() {
 		}
 		if number := c.Query("number"); number != "" {
 			query = query.Where("number = ?", number)
+		} else {
+			query = query.Where("number = ?", config.NumberOfRaces)
 		}
 		if startTime := c.Query("startTime"); startTime != "" {
 			query = query.Where("create_time >= ?", startTime)

@@ -41,10 +41,10 @@ func FeiBang(ctx *openwechat.MessageContext) {
 			return
 		}
 		// 使用正则表达式解析消息
-		re := regexp.MustCompile(`@少爷\s(.+?)-评《(.+?)》(.+)`)
+		re := regexp.MustCompile(`@(.+?)\s*(《.+?》)\s*([\s\S]+)`)
 		matches := re.FindStringSubmatch(msgContent)
 		if len(matches) <= 2 {
-			ctx.ReplyText("评论格式错误，请参考格式[@少爷 笔名-评《小说名字》评价内容]，@" + sender.NickName)
+			ctx.ReplyText("评论格式错误，请参考格式@少爷《小说名字》评论内容@" + sender.NickName)
 			return
 		}
 
@@ -54,15 +54,14 @@ func FeiBang(ctx *openwechat.MessageContext) {
 		}
 		newComment := &db.Comment{
 			MsgId:       ctx.Message.MsgId,
-			Pseudonym:   matches[1],
 			WxNickName:  sender.NickName,
 			Number:      config.NumberOfRaces,
-			NovelTitle:  "《" + matches[2] + "》",
+			NovelTitle:  matches[2],
 			CommentText: matches[3],
 			CreateTime:  time.Now().Format(time.DateTime),
 			UpdateTime:  time.Now().Format(time.DateTime),
 		}
-		if comment, err := db.FindCommentByCondition(sender.NickName, config.NumberOfRaces, "《"+matches[2]+"》", matches[1]); err == nil && comment != nil {
+		if comment, err := db.FindCommentByCondition(sender.NickName, config.NumberOfRaces, matches[2]); err == nil && comment != nil {
 			ctx.ReplyText("感谢评论，你已经评论过了，少爷我只收一次哦@" + sender.NickName)
 		} else {
 			if err := db.CreateComment(newComment); err == nil {

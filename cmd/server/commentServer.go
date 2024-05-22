@@ -38,7 +38,7 @@ func StartApiServer() {
 		}
 		offset := (page - 1) * pageSize
 
-		query := db.DB.Debug()
+		query := db.DB
 		if wxNickName := c.Query("wxNickName"); wxNickName != "" {
 			query = query.Where("wx_nick_name LIKE ?", "%"+wxNickName+"%")
 		}

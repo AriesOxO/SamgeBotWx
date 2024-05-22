@@ -44,15 +44,15 @@ func FeiBang(ctx *openwechat.MessageContext) {
 		re := regexp.MustCompile(`@少爷\s(.+?)-评《(.+?)》(.+)`)
 		matches := re.FindStringSubmatch(msgContent)
 		if len(matches) <= 2 {
-			ctx.ReplyText("评论格式错误，请参考格式[@少爷 笔名-评《小说名字》评价内容]，" + sender.NickName)
+			ctx.ReplyText("评论格式错误，请参考格式[@少爷 笔名-评《小说名字》评价内容]，@" + sender.NickName)
 			return
 		}
 		if strutil.GetStrLength(matches[1]) < 1 {
-			ctx.ReplyText("未识别到笔名，请参考格式请参考格式[@少爷 笔名-评《小说名字》评价内容]，" + sender.NickName)
+			ctx.ReplyText("未识别到笔名，请参考格式请参考格式[@少爷 笔名-评《小说名字》评价内容]，@" + sender.NickName)
 			return
 		}
 		if strutil.GetStrLength(matches[2]) < 1 {
-			ctx.ReplyText("未识别到小说名字，请参考格式请参考格式[@少爷 笔名-评《小说名字》评价内容]，" + sender.NickName)
+			ctx.ReplyText("未识别到小说名字，请参考格式请参考格式[@少爷 笔名-评《小说名字》评价内容]，@" + sender.NickName)
 			return
 		}
 

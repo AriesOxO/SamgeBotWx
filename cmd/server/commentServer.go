@@ -55,6 +55,7 @@ func StartApiServer() {
 			query = query.Where("create_time <= ?", endTime)
 		}
 
+		query = query.Order("create_time desc").Find(&comments)
 		// 获取总记录数
 		query.Model(&db.Comment{}).Count(&totalCount)
 

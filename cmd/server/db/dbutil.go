@@ -21,6 +21,15 @@ type Comment struct {
 	UpdateTime  string `gorm:"not null;column:update_time"`
 }
 
+type Novel struct {
+	ID          uint   `gorm:"primaryKey;autoIncrement"`
+	Number      int    `gorm:"not null;column:number"`
+	Author      string `gorm:"not null;column:author"`
+	NovelTitle  string `gorm:"not null;column:novel_title"`
+	ReadMe      string `gorm:"column:read_me"`
+}
+
+
 type CommentStatic struct {
 	WxNickName string
 	NovelTitle string
@@ -49,6 +58,50 @@ func CreateComment(comment *Comment) error {
 	}
 	return nil
 }
+
+// CreateNovel 创建书籍信息
+func CreateNovel(novel *Novel) error {
+	result := DB.Create(novel)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+// 批量插入Novels
+func CreateNovels(novels []Novel) error {
+	return DB.Create(&novels).Error
+}
+
+// 根据Number, Author, NovelTitle联合查询
+func FindNovel(number int, author, novelTitle string) (Novel, error) {
+	var novel Novel
+	err := DB.Where("number = ? AND author = ? AND novel_title = ?", number, author, novelTitle).First(&novel).Error
+	return novel, err
+}
+
+// 根据Number, Author, NovelTitle联合查询ReadMe
+func GetReadMe(number int, author, novelTitle string) (string, error) {
+	var novel Novel
+	err := DB.Where("number = ? AND author = ? AND novel_title = ?", number, author, novelTitle).First(&novel).Error
+	if err != nil {
+		return "作者暂未写自述哦", err
+	}
+	if novel.ReadMe == "" {
+		return "作者暂未写自述哦", nil
+	}
+	return novel.ReadMe, err
+}
+// 更新Novel
+func UpdateNovel(novel *Novel) error {
+	return DB.Save(novel).Error
+}
+
+// 根据Number, Author, NovelTitle联合删除
+func DeleteNovelByCompositeKey(number int, author, novelTitle string) error {
+	return DB.Where("number = ? AND author = ? AND novel_title = ?", number, author, novelTitle).Delete(&Novel{}).Error
+}
+
+
 
 // GetCommentByID 根据ID获取评论
 func GetCommentByID(id uint) (*Comment, error) {

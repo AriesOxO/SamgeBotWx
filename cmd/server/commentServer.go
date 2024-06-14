@@ -151,5 +151,36 @@ func StartApiServer() {
 		c.JSON(http.StatusOK, result)
 	})
 
+	// 定义获取ReadMe的API接口
+	r.GET("/novels/readme", func(c *gin.Context) {
+		number, _ := strconv.Atoi(c.Query("number"))
+		author := c.Query("author")
+		novelTitle := c.Query("novel_title")
+		readMe, err := db.GetReadMe(number, author, novelTitle)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Novel not found"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"readMe": readMe})
+	})
+
+	// 定义批量插入Novels的API接口
+	r.POST("/novels/batch-insert", func(c *gin.Context) {
+		var novels []db.Novel
+		if err := c.BindJSON(&novels); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		if err :=db.CreateNovels(novels); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert novels"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": "Novels inserted successfully"})
+	})
+
+
+
 	r.Run(":8888") // listen and serve on 0.0.0.0:8080
 }

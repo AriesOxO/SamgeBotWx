@@ -41,27 +41,42 @@ func FeiBang(ctx *openwechat.MessageContext) {
 			return
 		}
 		// 使用正则表达式解析消息
-		re := regexp.MustCompile(`@(.+?)\s*(《.+?》)\s*([\s\S]+)`)
+		re := regexp.MustCompile(`(?s)@少爷\p{Z}+(.*?)\p{Z}+(.*?)\p{Z}+(.*)`)
 		matches := re.FindStringSubmatch(msgContent)
 		if len(matches) <= 2 {
-			ctx.ReplyText("评论格式错误，请参考格式@少爷《小说名字》评论内容@" + sender.NickName)
+			ctx.ReplyText("评论格式错误，请参考格式[@少爷 笔名 小说名字 评价内容(字数需大于50)]，@" + sender.NickName)
 			return
 		}
-
-		if strutil.GetStrLength(matches[3]) < 30 {
+		if strutil.GetStrLength(matches[1]) < 1 && strutil.GetStrLength(matches[1]) > 10 {
+			ctx.ReplyText("未识别到笔名，请参考格式请参考格式[@少爷 笔名 小说名字 评价内容(字数需大于50)]，@" + sender.NickName)
+			return
+		}
+		if strutil.GetStrLength(matches[2]) < 1 {
+			ctx.ReplyText("未识别到小说名字，请参考格式请参考格式[@少爷 笔名 小说名字 评价内容(字数需大于50)]，@" + sender.NickName)
+			return
+		}
+		if strings.Contains(matches[2], "《") && strings.Contains(matches[2], "》") {
+			ctx.ReplyText("格式错误，小说名字不能包含书名号@" + sender.NickName)
+			return
+		}
+		if strutil.GetStrLength(matches[2]) > 45 {
+			ctx.ReplyText("格式错误，小说名字过长，请检查格式是否错误，@" + sender.NickName)
+			return
+		}
+		if strutil.GetStrLength(matches[3]) < 50 {
 			ctx.ReplyText("评论内容过少，本少爷不收@" + sender.NickName)
 			return
 		}
 		newComment := &db.Comment{
 			MsgId:       ctx.Message.MsgId,
-			WxNickName:  sender.NickName,
+			WxNickName:  matches[1],
 			Number:      config.NumberOfRaces,
-			NovelTitle:  matches[2],
+			NovelTitle:  "《" + matches[2] + "》",
 			CommentText: matches[3],
 			CreateTime:  time.Now().Format(time.DateTime),
 			UpdateTime:  time.Now().Format(time.DateTime),
 		}
-		if comment, err := db.FindCommentByCondition(sender.NickName, config.NumberOfRaces, matches[2]); err == nil && comment != nil {
+		if comment, err := db.FindCommentByCondition(matches[1], config.NumberOfRaces, "《"+matches[2]+"》"); err == nil && comment != nil {
 			ctx.ReplyText("感谢评论，你已经评论过了，少爷我只收一次哦@" + sender.NickName)
 		} else {
 			if err := db.CreateComment(newComment); err == nil {

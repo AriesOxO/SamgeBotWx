@@ -80,7 +80,8 @@ func FeiBang(ctx *openwechat.MessageContext) {
 			ctx.ReplyText("感谢评论，你已经评论过了，少爷我只收一次哦@" + sender.NickName)
 		} else {
 			if err := db.CreateComment(newComment); err == nil {
-				ctx.ReplyText("感谢评论，已收录@" + sender.NickName)
+				ctx.ReplyText("感谢<" + matches[1] + ">评论小说《" + matches[2] + "》，已收录@" + sender.NickName)
+				ctx.ReplyText("请注意核对[评论昵称]和[小说名称]，如果错误请撤回重新评论，辛苦啦OvO")
 			} else {
 				// 处理创建评论时的错误
 				ctx.ReplyText("抱歉，少爷我没匹配到评论@" + sender.NickName)

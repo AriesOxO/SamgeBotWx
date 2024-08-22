@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 )
 
@@ -61,6 +62,10 @@ func NeedParseCmd(name string, content string) bool {
 	return IsManagerUser(name) && IsCmdContent(content)
 }
 
+func ValidTitle(title string) bool {
+	return strings.Contains(config.NovelCatalogue,title)
+}
+
 // Configuration 项目配置
 type Configuration struct {
 	BaseUrl string `json:"base_url"` // openai的请求地址，需要携带v1版本号，默认是：${DefaultBaseUrl} ，可配置转发地址/本地部署的模型api地址
@@ -81,7 +86,8 @@ type Configuration struct {
 	WebPort       string `json:"web_port"`
 	SqliteUrl     string `json:"sql_ite_url"`
 	CommentGroups string `json:"comment_groups"`
-	EnableReply   bool   `json:"enable_reply"`
+	EnableReply    bool   `json:"enable_reply"`
+	NovelCatalogue string `json:"novel_catalogue"`
 }
 
 var config *Configuration
@@ -94,7 +100,6 @@ func LoadConfig() *Configuration {
 		config = &Configuration{
 			BaseUrl: DefaultBaseUrl,
 			BotDesc: "",
-
 			ApiKey:           "",
 			Model:            DefaultModel,
 			MaxTokens:        60,
@@ -109,6 +114,7 @@ func LoadConfig() *Configuration {
 			WebPort:          "8887",
 			SqliteUrl:        "./webot.db",
 			EnableReply:      true,
+			NovelCatalogue:   "",
 		}
 
 		// 判断配置文件是否存在，存在直接JSON读取

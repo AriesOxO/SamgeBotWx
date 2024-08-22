@@ -76,6 +76,10 @@ func FeiBang(ctx *openwechat.MessageContext) {
 			CreateTime:  time.Now().Format(time.DateTime),
 			UpdateTime:  time.Now().Format(time.DateTime),
 		}
+		if !config.ValidTitle(matches[2]) {
+			ctx.ReplyText("您的评论小说标题【"+matches[2]+"】写错了噢，请检查一下重新评论(⊙o⊙)？@" + sender.NickName)
+			return
+		}
 		if comment, err := db.FindCommentByCondition(matches[1], config.NumberOfRaces, "《"+matches[2]+"》"); err == nil && comment != nil {
 			ctx.ReplyText("感谢评论，你已经评论过了，少爷我只收一次哦@" + sender.NickName)
 		} else {

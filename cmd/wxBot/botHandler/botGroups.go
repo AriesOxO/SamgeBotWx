@@ -28,6 +28,23 @@ func FeiBang(ctx *openwechat.MessageContext) {
 		ctx.ReplyText("拍本少爷干嘛！去读书！去码字！去谈恋爱哇Q_Q")
 	}
 	msgContent := ctx.Content
+	if ctx.IsRecalled() {
+		if err := db.InitDB(); err != nil {
+			log.Fatalf("Error initializing database: %v", err)
+		}
+		msg := ctx.Message
+		revokeMsg, _ := msg.RevokeMsg()    // 获取撤回消息对象
+		msgId := revokeMsg.RevokeMsg.MsgId // 拿到撤回消息的id
+		comment, err := db.GetCommentByWxID(strconv.FormatInt(msgId, 10))
+		if err != nil {
+			fmt.Println("获取评论时出错:", err)
+			return
+		}
+		if comment != nil && len(comment.WxNickName) > 0 {
+			ctx.ReplyText("评论消息撤回,收录评论已删除@" + comment.WxNickName + "请重新评论哦QvQ")
+			db.DeleteCommentByWxID(strconv.FormatInt(msgId, 10))
+		}
+	}
 	if ctx.IsAt() {
 		if strings.Contains(msgContent, "」\n- - - - - - - - - - - - - - -\n") {
 			return
@@ -92,22 +109,5 @@ func FeiBang(ctx *openwechat.MessageContext) {
 			}
 		}
 
-	}
-	if ctx.IsRecalled() {
-		if err := db.InitDB(); err != nil {
-			log.Fatalf("Error initializing database: %v", err)
-		}
-		msg := ctx.Message
-		revokeMsg, _ := msg.RevokeMsg()    // 获取撤回消息对象
-		msgId := revokeMsg.RevokeMsg.MsgId // 拿到撤回消息的id
-		comment, err := db.GetCommentByWxID(strconv.FormatInt(msgId, 10))
-		if err != nil {
-			fmt.Println("获取评论时出错:", err)
-			return
-		}
-		if comment != nil && len(comment.WxNickName) > 0 {
-			ctx.ReplyText("评论消息撤回,收录评论已删除@" + comment.WxNickName + "请重新评论哦QvQ")
-			db.DeleteCommentByWxID(strconv.FormatInt(msgId, 10))
-		}
 	}
 }

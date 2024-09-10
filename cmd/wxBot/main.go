@@ -4,6 +4,7 @@ package main
 
 import (
 	"SamgeWxApi/cmd/server"
+	"SamgeWxApi/cmd/server/db"
 	config "SamgeWxApi/cmd/utils/u_config"
 	"SamgeWxApi/cmd/wxBot/botHandler"
 	"SamgeWxApi/cmd/wxBot/botMsg"
@@ -31,7 +32,8 @@ func RunBot() {
 	_ = bot.Block() // 阻塞主goroutine, 直到发生异常或者用户主动退出
 }
 func main() {
-	go RunBot()
+	go db.InitDB()
+	//go RunBot()
 	go server.StartApiServer()
 	go server.StartWebServer()
 	select {}

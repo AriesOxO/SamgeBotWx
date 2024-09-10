@@ -21,9 +21,6 @@ func StartApiServer() {
 
 	//根据条件查询所有评论
 	r.GET("/api/comments", func(c *gin.Context) {
-		if err := db.InitDB(); err != nil {
-			log.Fatalf("Error initializing database: %v", err)
-		}
 		var comments []db.Comment
 		var totalCount int64
 
@@ -116,10 +113,6 @@ func StartApiServer() {
 			sortOrder = "DESC"
 		}
 		query := fmt.Sprintf("SELECT %s, COUNT(*) AS count FROM comments where  %s GROUP BY %s ORDER BY count %s", groutBy, condition, groutBy, sortOrder)
-		if err := db.InitDB(); err != nil {
-			log.Fatalf("Error initializing database: %v", err)
-		}
-		db.DB.Debug()
 		rows, err := db.DB.Raw(query).Rows()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})

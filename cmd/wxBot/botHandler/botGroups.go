@@ -29,9 +29,6 @@ func FeiBang(ctx *openwechat.MessageContext) {
 	}
 	msgContent := ctx.Content
 	if ctx.IsRecalled() {
-		if err := db.InitDB(); err != nil {
-			log.Fatalf("Error initializing database: %v", err)
-		}
 		msg := ctx.Message
 		revokeMsg, _ := msg.RevokeMsg()    // 获取撤回消息对象
 		msgId := revokeMsg.RevokeMsg.MsgId // 拿到撤回消息的id
@@ -48,9 +45,6 @@ func FeiBang(ctx *openwechat.MessageContext) {
 	if ctx.IsAt() {
 		if strings.Contains(msgContent, "」\n- - - - - - - - - - - - - - -\n") {
 			return
-		}
-		if err := db.InitDB(); err != nil {
-			log.Fatalf("Error initializing database: %v", err)
 		}
 		sender, err := ctx.SenderInGroup() // 获取群内发送者信息
 		if err != nil {

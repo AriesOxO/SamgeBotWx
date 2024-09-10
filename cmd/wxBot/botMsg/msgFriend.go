@@ -46,12 +46,21 @@ func OnFriend(dispatcher *openwechat.MessageMatchDispatcher) {
 				if len(parts) == 2 {
 					season, err := strconv.Atoi(parts[1])
 					if err == nil {
-						config.NumberOfRaces = season
-						ctx.ReplyText(fmt.Sprintf("当前赛季设置为：%d", config.NumberOfRaces))
+						config.LoadConfig().CompetitionNumber = season
+						ctx.ReplyText(fmt.Sprintf("当前赛季设置为：%d", config.LoadConfig().CompetitionNumber))
 						return
 					}
 				}
 				ctx.ReplyText("无效的赛季设置格式")
+			}
+			if strings.HasPrefix(ctx.Content, "设置赛季小说目录=") {
+				parts := strings.Split(ctx.Content, "=")
+				if len(parts) == 2 {
+					config.LoadConfig().NovelCatalogue = parts[1]
+					ctx.ReplyText(fmt.Sprintf("当前赛季小说目录为：%s", config.LoadConfig().NovelCatalogue))
+					return
+				}
+				ctx.ReplyText("无效的赛季小说目录设置格式")
 			}
 			//qType := fmt.Sprintf("[好友]%s|%s|%s|%s", name, sender.Self().ID(), sender.DisplayName, sender.RemarkName)
 			//botUtil.CheckStartTagAndReply(msg, qType, sender)

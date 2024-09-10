@@ -81,7 +81,7 @@ func FeiBang(ctx *openwechat.MessageContext) {
 		newComment := &db.Comment{
 			MsgId:       ctx.Message.MsgId,
 			WxNickName:  matches[1],
-			Number:      config.NumberOfRaces,
+			Number:      config.LoadConfig().CompetitionNumber,
 			NovelTitle:  "《" + matches[2] + "》",
 			CommentText: matches[3],
 			CreateTime:  time.Now().Format(time.DateTime),
@@ -91,7 +91,7 @@ func FeiBang(ctx *openwechat.MessageContext) {
 			ctx.ReplyText("您的评论小说标题【"+matches[2]+"】写错了噢，请检查一下重新评论(⊙o⊙)？@" + sender.NickName)
 			return
 		}
-		if comment, err := db.FindCommentByCondition(matches[1], config.NumberOfRaces, "《"+matches[2]+"》"); err == nil && comment != nil {
+		if comment, err := db.FindCommentByCondition(matches[1], config.LoadConfig().CompetitionNumber, "《"+matches[2]+"》"); err == nil && comment != nil {
 			ctx.ReplyText("感谢评论，你已经评论过了，少爷我只收一次哦@" + sender.NickName)
 		} else {
 			if err := db.CreateComment(newComment); err == nil {

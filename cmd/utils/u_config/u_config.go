@@ -12,9 +12,7 @@ import (
 	"sync"
 )
 
-var NumberOfRaces int = 999
 var BotEnable int = 1
-var superPwd string = "密码就是我不告诉你"
 
 const (
 	BotCacheDir      = "tmp/wxBotCache/botCacheFile"
@@ -88,6 +86,7 @@ type Configuration struct {
 	CommentGroups string `json:"comment_groups"`
 	EnableReply    bool   `json:"enable_reply"`
 	NovelCatalogue string `json:"novel_catalogue"`
+	CompetitionNumber  int  `json:"competition_number"`
 }
 
 var config *Configuration
@@ -232,9 +231,24 @@ func LoadConfig() *Configuration {
 		if EnableReply != "" {
 			config.EnableReply = EnableReply == "true"
 		}
-
 		fmt.Printf("config.EnableReply=%v\n", config.EnableReply)
-	})
+		CompetitionNumber := os.Getenv("sg.samge_wx_bot.competition_number")
+		if CompetitionNumber != "" {
+			number, err := strconv.Atoi(CompetitionNumber)
+			if err != nil {
+				log.Fatalf(fmt.Sprintf("config CompetitionNumber err: %v ,get is %v", err, CompetitionNumber))
+				return
+			}
+			config.CompetitionNumber = number
+		}
+		fmt.Printf("config.CompetitionNumber=%v\n", config.CompetitionNumber)
 
+		NovelCatalogue := os.Getenv("sg.samge_wx_bot.novel_catalogue")
+		if EnableReply != "" {
+			config.NovelCatalogue = NovelCatalogue
+		}
+		fmt.Printf("config.NovelCatalogue=%v\n", config.NovelCatalogue)
+	})
 	return config
 }
+

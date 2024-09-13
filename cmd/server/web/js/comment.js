@@ -29,13 +29,11 @@ function fetchComments(interfaceName, page, pageSize) {
 
 function displayComments(comments) {
     const tableBody = document.getElementById('commentsBody');
-    let totalCount = comments.total;
-    let pageSize = comments.pageSize;
-    let totalPages = Math.ceil(totalCount / pageSize);
-
+    const totalCount = comments.total;
+    const pageSize = comments.pageSize;
+    const totalPages = Math.ceil(totalCount / pageSize);
     tableBody.innerHTML = '';
-    document.getElementById('totalPages').textContent = totalPages;
-
+    document.getElementById('totalPages').textContent = `共${totalPages}页`;
     comments.data.forEach(comment => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -47,6 +45,53 @@ function displayComments(comments) {
         `;
         tableBody.appendChild(row);
     });
+    setPagination()
+}
+
+function setPagination(){
+  const page = document.getElementById('currentPage').textContent;
+  const pageRange = getPageRange(Number(totalPages), Number(page), 5);
+  const pageList = document.getElementById('page-btns');
+  pageList.innerHTML = ''
+  pageRange.forEach(item=>{
+    const span = document.createElement('span');
+    span.textContent = item;
+    span.className = (item == page ? 'page-active' : '');
+    span.setAttribute('data-item', item);
+    // 绑定点击事件
+    span.onclick = function() {
+      if(currentPage == this.getAttribute('data-item')) return
+      fetchComments('comments', this.getAttribute('data-item'), pageSize);
+      currentPage = this.getAttribute('data-item');
+      document.getElementById('currentPage').textContent = this.getAttribute('data-item');
+    };
+    pageList.appendChild(span);
+  })
+}
+
+function getPageRange(totalPages, currentPage, displayCount) {
+  if (displayCount % 2 === 0) {
+      displayCount++;
+  }
+  const halfDisplay = Math.floor(displayCount / 2);
+  let startPage = currentPage - halfDisplay;
+  let endPage = currentPage + halfDisplay;
+  if (startPage < 1) {
+      endPage += Math.abs(startPage) + 1;
+      startPage = 1;
+  }
+  if (endPage > totalPages) {
+      startPage -= (endPage - totalPages);
+      endPage = totalPages;
+  }
+  if (startPage < 1) {
+      startPage = 1;
+  }
+  const pages = [];
+  for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+  }
+  return pages;
 }
 
 
@@ -71,3 +116,4 @@ function changePageSize() {
     fetchComments('comments', currentPage, pageSize);
     document.getElementById('currentPage').textContent = currentPage;
 }
+

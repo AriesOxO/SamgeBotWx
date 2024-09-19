@@ -1,11 +1,17 @@
 const chartData = {
-  data1: null,
-  data2: null,
-  data3: null
+  data1: {timer: null},
+  data2: {timer: null},
+  data3: {timer: null}
 }
 let timer = null
 
 function fetchComments(interfaceName, sortType, limit) {
+  for (let key in chartData) {
+    if (chartData[key].timer) {
+      clearInterval(chartData[key].timer)
+      chartData[key].timer = null
+    }
+  }
   const wxNickName = document.getElementById('wxNickName').value;
   const novelTitle = document.getElementById('novelTitle').value;
   const numberOfRaces = document.getElementById('numberOfRaces').value;
@@ -14,8 +20,8 @@ function fetchComments(interfaceName, sortType, limit) {
 
   // 定义一个数组来收集所有的 Promise
   const promises = [];
-
-  groupTypeValues.forEach(groupType => {
+  groupTypeValues.forEach((groupType, index) => {
+    createSvgDom(index)
     let currentUrl = url; // 每次循环重新初始化URL
     if (wxNickName.trim() !== '') {
       currentUrl += `&wxNickName=${wxNickName}`;
@@ -38,21 +44,21 @@ function fetchComments(interfaceName, sortType, limit) {
         if (groupType === 1) {
           chartData.data1 = {
             title: '评论者排名',
-            data,
+            data: data ? data : [],
             type: 0,
             index: 1
           };
         } else if (groupType === 2) {
           chartData.data2 = {
             title: '小说被评排名',
-            data,
+            data: data ? data : [],
             type: 1,
             index: 1
           };
         } else if (groupType === 3) {
           chartData.data3 = {
             title: '历届评论排名',
-            data,
+            data: data ? data : [],
             type: 2,
             index: 1
           };
@@ -63,40 +69,82 @@ function fetchComments(interfaceName, sortType, limit) {
 
   // 使用 Promise.all 等待所有请求完成
   Promise.all(promises).then(() => {
-    setChartData()
+    for (let i = 0; i < 3; i++) {
+      setChartData(i)
+    }
   }).catch(errors => {
     // 处理可能出现的错误
     console.error('Some requests failed:', errors);
   });
 }
 
+
+function createSvgDom() {
+  for (let i = 0; i < 3; i++) {
+    const chartsBox = document.querySelectorAll('.charts-li-content');
+    const targetChartsBox = chartsBox[i];
+    const width = targetChartsBox.clientWidth
+    const isMoBile = window.innerWidth <= 1200
+    const height = isMoBile ? 650 : targetChartsBox.clientHeight
+    const svg =
+      `<svg width="${width}" height="${height}" class="dv-border-svg-container">
+        <path fill="transparent" stroke="#6586ec" d="
+              M 5 20 L 5 10 L 12 3  L 60 3 L 68 10
+              L ${width - 20} 10 L ${width - 5} 25
+              L ${width - 5} ${height - 5} L 20 ${height - 5}
+              L 5 ${height - 20} L 5 20
+          " />
+        <path fill="transparent" stroke-width="3" stroke-linecap="round" stroke-dasharray="10, 5"
+          stroke="#6586ec" d="M 16 9 L 61 9" />
+        <path fill="transparent" stroke="#6586ec" d="M 5 20 L 5 10 L 12 3  L 60 3 L 68 10" />
+        <path fill="transparent" stroke="#2cf7fe" d="M ${width - 5} ${height - 30} L ${width - 5} ${height - 5} L ${
+            width - 30} ${height - 5}" />
+      </svg>`
+    if (targetChartsBox) {
+      const existingSvgDiv = targetChartsBox.querySelector('div.svg');
+      if (existingSvgDiv) {
+        existingSvgDiv.innerHTML = svg
+      } else {
+        const newSvgDiv = document.createElement('div');
+        newSvgDiv.className = 'svg';
+        newSvgDiv.innerHTML = svg;
+        targetChartsBox.appendChild(newSvgDiv);
+      }
+    } else {
+      console.error('chartsBox element with the specified type does not exist.');
+    }
+  }
+}
+
 // 数据切片
-function getPageData(dataArray, pageNum = 1, pageSize = 10) {
+function getPageData(dataArray, pageNum = 1, pageSize = 20) {
+  if(dataArray.length == 0){
+    
+  }
   const startIndex = (pageNum - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const pageData = dataArray.slice(startIndex, endIndex);
   return pageData;
 }
 
-function setChartData() {
-  for (let key in chartData) {
-    const title = chartData[key].title
-    const option = getPageData(chartData[key].data, chartData[key].index)
-    chartData[key].index = getNextPage(chartData[key].data, chartData[key].index)
-    chartInit(title, option, chartData[key].type)
+function setChartData(index) {
+  const key = 'data' + (index + 1)
+  if (chartData[key].timer) {
+    clearInterval(chartData[key].timer)
   }
-  timer = setTimeout(() => {
-    setChartData()
-  }, 3000)
+  const title = chartData[key].title
+  const option = getPageData(chartData[key].data, chartData[key].index)
+  chartData[key].index = getNextPage(chartData[key].data, chartData[key].index)
+  chartInit(title, option, index)
 }
 
 function getNextPage(arr, pageNum) {
-  const itemsPerPage = 10;
+  const itemsPerPage = 20;
   const totalPages = Math.ceil(arr.length / itemsPerPage);
   const startIdx = (pageNum - 1) * itemsPerPage;
   const endIdx = startIdx + itemsPerPage;
   if (pageNum < 1 || pageNum > totalPages) {
-    throw new Error('Invalid page number');
+    return 1
   }
   const nextPageNum = (pageNum % totalPages) + 1;
   return nextPageNum
@@ -107,80 +155,126 @@ window.addEventListener('resize', () => {
     clearTimeout(timer)
   }
   timer = setTimeout(() => {
-    setChartData()
+    createSvgDom()
   }, 200)
 })
 
+function calculatePercentage(data) {
+  const maxValue = Math.max(...data.map(item => item.value));
+  return data.map(item => ({
+    ...item,
+    percentage: (item.value / maxValue * 100).toFixed(2) + '%'
+  }));
+}
+
+function generateIntervals(data) {
+  const maxValue = Math.max(...data.map(item => item.value));
+  const minValue = 0;
+  const step = (maxValue - minValue) / 5;
+  const intervals = [];
+  for (let i = 0; i <= 5; i++) {
+    intervals.push(Math.round(minValue + i * step)); // 保留两位小数
+  }
+  return intervals;
+}
+
 function chartInit(title, list, type) {
   const data = list.map(item => {
+    const maxValue = Math.max(...list.map(item => item.Count));
     return {
       value: item.Count,
-      name: item.WxNickName
+      name: item.WxNickName,
+      percentage: (item.Count / maxValue * 100).toFixed(2) + '%'
     }
   })
-  const chartDom = document.querySelectorAll('.chart-dom')
+  const intervals = generateIntervals(data)
+  const colors = [
+    "#6586ec",
+    "#37a2da",
+    "#32c5e9",
+    "#67e0e3",
+    "#9fe6b8",
+    "#ffdb5c",
+    "#fffb85",
+    "#ff9f7f",
+    "#fb7293",
+    "#fb2856",
+    "#ffaaff",
+    "#55ffff",
+    "#aaffff",
+    "#aaff7f",
+    "#00ff00",
+    "#aaaa00",
+    "#00aa00",
+    "#aa5500",
+    "#aa557f",
+    "#ff007f",
+  ]
+  const chartDom = document.querySelectorAll('.chart-dom')[type]
+  const footDom = document.querySelectorAll('.chart-footer')[type]
   chartDom.innerHTML = ''
-  const myChart = echarts.init(chartDom[type]);
-  const option = {
-    title: {
-      text: title,
-      left: 'center'
-    },
-    tooltip: {
-      trigger: 'item',
-      formatter: function(d) {
-        return `${d.seriesName}<br/>${d.marker}  ${d.data.name + (type == 2 ? '届' : '')}: ${d.data.value}`
-      }
-    },
-    series: [{
-        name: title,
-        type: 'pie',
-        radius: '50%',
-        data,
-        emphasis: {
-          itemStyle: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
-          }
-        },
-        label: {
-          show: true,
-          position: 'inside',
-          textStyle: {
-            fontWeight: 300,
-            fontSize: 10
-          },
-          formatter: function(d) {
-            return '数量:' + d.data.value
-          }
-        }
-      },
-      {
-        name: title,
-        type: 'pie',
-        radius: '50%',
-        data,
-        emphasis: {
-          itemStyle: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
-          }
-        },
-        label: {
-          show: true,
-          position: 'outside', //标签的位置
-          textStyle: {
-            fontWeight: 300,
-            fontSize: 14 //文字的字体大小
-          },
-          formatter: function(d) {
-            return type == 0 ? '笔名:' + d.data.name : type == 1 ? '名称' + d.data.name : '届数:' + d.data.name
-          }
-        }
-      }
-    ]
+  data.forEach((item, index) => {
+    const element = document.createElement('div');
+    element.className = 'bar-chart-li'
+    element.innerHTML = `
+        <div class="bar-chart-title" title="${item.name}">${item.name}</div>
+        <div class="bar-chart-box">
+          <div class="bar-chart-container" style="width: ${item.percentage};background-color: ${colors[index]}"></div>
+          <div class="bar-chart-count">${item.value}</div>
+        </div>
+    `;
+    chartDom.appendChild(element);
+  })
+  
+  if(data.length == 0) {
+    footDom.innerHTML = `<div>空</div>`
+  }else{
+    let footer = ''
+    intervals.forEach(item => {
+      footer += `<div>${item}</div>`
+    })
+    footDom.innerHTML = footer
+  }
+  const isMoBile = window.innerWidth <= 1200
+  // 移动端十秒更新一次数据
+  if(isMoBile){
+    const key = 'data' + (type + 1)
+    if (chartData[key].timer) {
+      clearInterval(chartData[key].timer)
+      chartData[key].timer = null
+    }
+    chartData[key].timer = setInterval(() => {
+      setChartData(type)
+    }, 10000)
+  }else{
+    start(type)
+  }
+}
+
+
+function start(type) {
+  const key = 'data' + (type + 1)
+  if (chartData[key].timer) {
+    clearInterval(chartData[key].timer)
+    chartData[key].timer = null
+  }
+  const chartDom = document.querySelectorAll('.chart-dom')[type]
+  chartDom.onmouseover = () => {
+    clearInterval(chartData[key].timer)
+    chartData[key].timer = null
+  }
+  chartDom.onmouseout = () => {
+    start(type)
   };
-  option && myChart.setOption(option);
+  if (chartDom.clientHeight >= chartDom.scrollHeight) {
+    return
+  }
+  
+  chartData[key].timer = setInterval(() => {
+    chartDom.scrollTop += 1
+    if (chartDom.clientHeight + chartDom.scrollTop == chartDom.scrollHeight) {
+      chartDom.scrollTop = 0
+      setChartData(type)
+    }
+  }, 50)
 }

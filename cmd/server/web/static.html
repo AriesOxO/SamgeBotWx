@@ -30,28 +30,42 @@
           <input class="search-input" type="number" placeholder="请输入比赛届数" id="numberOfRaces" />
         </div>
         <div class="serach-button">
-          <div class="search-btn" onclick="fetchComments('comments')">查询</div>
+          <div class="search-btn" onclick="fetchComments('static', 1, 20)">查询</div>
         </div>
       </div>
       <div class="content-container">
-        <!-- 分为四部分，中间展示图片，三块统计动画分散 -->
-        <div class="chart-content">
-          <!-- <img src="./img/backgroudImage.png" alt="image" /> -->
-        </div>
         <div class="charts-box">
           <div class="charts-li">
             <div class="charts-li-content">
+              <div class="chart-title">
+                <img src="./img/xiezuo.png" alt="xiezuo" />
+                <p>评论者排名</p>
+                <img src="./img/xieyou.png" alt="xieyou" />
+              </div>
               <div class="chart-dom"></div>
+              <div class="chart-footer"></div>
             </div>
           </div>
           <div class="charts-li">
             <div class="charts-li-content">
+              <div class="chart-title">
+                <img src="./img/xiezuo.png" alt="xiezuo" />
+                <p>小说被评排名</p>
+                <img src="./img/xieyou.png" alt="xieyou" />
+              </div>
               <div class="chart-dom"></div>
+              <div class="chart-footer"></div>
             </div>
           </div>
           <div class="charts-li">
             <div class="charts-li-content">
+              <div class="chart-title">
+                <img src="./img/xiezuo.png" alt="xiezuo" />
+                <p>历届评论排名</p>
+                <img src="./img/xieyou.png" alt="xieyou" />
+              </div>
               <div class="chart-dom"></div>
+              <div class="chart-footer"></div>
             </div>
           </div>
         </div>

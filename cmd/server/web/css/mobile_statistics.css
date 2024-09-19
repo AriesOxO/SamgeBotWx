@@ -1,125 +1,215 @@
-
-body {
-    font-family: Arial, sans-serif;
-    margin: 1px;
-    padding: 1px 1px;
-    font-size: 12px; /* 调整表格字体大小 */
+* {
+  padding: 0;
+  margin: 0
 }
 
-.container {
-    padding: 10px;
-    max-width: 100%; /* 限制容器宽度 */
-    margin: 0 auto; /* 水平居中 */
+body,
+html {
+  width: 100%;
 }
 
-.toggleTab {
-    text-align: left;
-    margin-bottom: 5px;
+.app-container {
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+  background: url(../img/pageBg.png) repeat;
+  padding: 30px 0 0;
 }
 
-.tabButton {
-    padding: 5px 5px;
-    background-color: green; /* 改为绿色 */
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    margin-right: 20px;
-    font-size: 12px; /* 调整按钮字体大小 */
+
+/* nav start.. */
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.search {
-    margin-bottom: 10px; /* 增加搜索组件底部间距 */
+.nav-container-box {
+  width: 100%;
+  height: 35px;
+  border-bottom: 2px solid #3670F6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
-.search div {
-    margin-bottom: 10px; /* 减小搜索组件的间距 */
+.nav-li {
+  width: 150px;
+  height: 100%;
+  font-weight: 500;
+  font-size: 14px;
+  color: #ffffff;
+  line-height: 35px;
+  text-align: center;
+  border: 2px solid #3670F6;
+  border-bottom: none;
+  border-right: none;
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
-label {
-    display: block;
-    margin-bottom: 2px;
+.nav-li:nth-of-type(1) {
+  border-radius: 30px 0 0 0;
 }
 
-input[type="text"],
-input[type="number"] {
-    width: 60%;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 12px; /* 调整输入框字体大小 */
+.nav-li:nth-of-type(2) {
+  border-radius: 0 30px 0 0;
 }
 
-button {
-    padding: 5px 5px;
-    background-color: green; /* 改为绿色 */
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 12px; /* 调整按钮字体大小 */
+.nav-li.active {
+  background: linear-gradient(317deg, #19A1EE 0%, #010a18 100%);
+  color: #ffffff;
 }
 
-.tables-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+
+/* search start... */
+
+.search-container {
+  padding: 16px;
+  box-sizing: border-box;
 }
 
-.table-wrapper {
-    width: 30%; /* 控制表格容器宽度 */
-    margin-bottom: 10px; /* 增加表格容器底部间距 */
+.serach-li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-.tableSpan {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
+.search-label {
+  font-family: MiSans, MiSans;
+  font-weight: 400;
+  font-size: 13px;
+  color: #ffffff;
+  margin-right: 10px;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 添加表格阴影 */
-    border-top: 1px solid #ccc; /* 添加上边框 */
+.search-input {
+  width: calc(100% - 80px);
+  height: 30px;
+  border: 1px solid #222222;
+  outline: none;
+  padding: 0 5px;
 }
 
-table th,
-table td {
-    padding: 2px;
-    border-bottom: 1px solid #ccc;
-    text-align: left;
+.search-input:focus {
+  border: 1px solid #19A1EE;
 }
 
-/* 添加表格边框 */
-table th,
-table td {
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
+.search-input::-webkit-outer-spin-button,
+.search-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }
 
-.pagination {
-    text-align: center;
-    margin-top: 10px;
+
+.search-btn {
+  width: 100%;
+  height: 34px;
+  background-color: #19A1EE;
+  border-radius: 2px;
+  text-align: center;
+  line-height: 34px;
+  cursor: pointer;
+  color: #ffffff;
 }
 
-.pagination button,
-.pagination select {
-    padding: 5px 5px;
-    background-color: green; /* 改为绿色 */
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-right: 5px;
-    font-size: 12px; /* 调整按钮字体大小 */
+.search-btn:hover {
+  opacity: 0.7;
 }
 
-.pagination select {
-    appearance: none;
-    -webkit-appearance: none;
+
+.search-btn:active {
+  color: aliceblue;
+  background-color: #3670F6;
 }
 
-#currentPage,
-#totalPages {
-    font-weight: bold;
+/* content start... */
+
+.charts-li {
+  height: 700px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.charts-li .charts-li-content {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  /* background-color: #ffffff; */
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
+  padding: 20px 20px 40px;
+}
+
+.charts-li-content .svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.chart-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+  box-sizing: border-box;
+}
+
+.chart-title p {
+  color: #ffffff;
+}
+
+
+
+.chart-footer{
+  width: calc(100% - 30px);
+  height: 40px;
+  padding-left: 130px;
+  box-sizing: border-box;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.bar-chart-li {
+  height: 26px;
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+}
+
+.bar-chart-title {
+  width: 120px;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bar-chart-box {
+  width: calc(100% - 160px);
+  position: relative;
+  margin-left: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 3px #999;
+  display: flex;
+  align-items: center;
+}
+
+.bar-chart-container {
+  width: 0;
+  height: 10px;
+  border-radius: 5px;
+  transition: all 0.5s;
+}
+
+.bar-chart-count {
+  position: absolute;
+  right: -35px;
+  top: 0;
+  font-size: 14px;
+  line-height: 14px;
 }

@@ -32,9 +32,9 @@ function fetchComments(interfaceName, sortType, limit) {
     if (numberOfRaces.trim() !== '') {
       currentUrl += `&number=${numberOfRaces}`;
     }
-    currentUrl += `&sortType=${sortType}`;
+    // currentUrl += `&sortType=${sortType}`;
     currentUrl += `&groupType=${groupType}`;
-    currentUrl += `&sortType=1`; // 假设sortType始终为1
+    currentUrl += `&sortType=2`; // 假设sortType始终为1
 
     // 将 fetch 请求的结果加入到 promises 数组中
     promises.push(

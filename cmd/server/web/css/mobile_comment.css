@@ -304,3 +304,9 @@ html {
 #pageSize{
   margin: 0 10px;
 }
+#commentsTable th:nth-child(2),
+#commentsTable td:nth-child(2),
+#commentsTable th:nth-child(5),
+#commentsTable td:nth-child(5) {
+  display: none;
+}

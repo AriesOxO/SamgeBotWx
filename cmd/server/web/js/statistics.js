@@ -170,9 +170,9 @@ function calculatePercentage(data) {
 function generateIntervals(data) {
   const maxValue = Math.max(...data.map(item => item.value));
   const minValue = 0;
-  const step = (maxValue - minValue) / 5;
+  const step = (maxValue - minValue) / 10;
   const intervals = [];
-  for (let i = 0; i <= 5; i++) {
+  for (let i = 0; i <= 10; i++) {
     intervals.push(Math.round(minValue + i * step)); // 保留两位小数
   }
   return intervals;

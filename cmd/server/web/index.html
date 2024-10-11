@@ -1,64 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>评论展示</title>
-    <link rel="stylesheet" type="text/css" href="css/mobile_comment.css" media="screen and (max-width:1200px)"/>
-    <link rel="stylesheet" type="text/css" href="css/pc_comment.css" media="screen and (min-width:1201px)"/>
-</head>
-<body onload="fetchComments('comments',1,10)">
-<div class="container">
-
-    <div class="toggleTab">
-        <button onclick="window.location.href='index.html'" class="tabButton">评论展示</button>
-        <button onclick="window.location.href='static.html'" class="tabButton">评论统计</button>
-    </div>
-    <div class="search">
-            <div>
-                <label for="wxNickName">笔名昵称:</label>
-                <input type="text" id="wxNickName">
-            </div>
-            <div>
-                <label for="novelTitle">小说标题:</label>
-                <input type="text" id="novelTitle">
-            </div>
-            <div>
-                <label for="novelTitle">比赛届数:</label>
-                <input type="number" id="numberOfRaces">
-            </div>
-        <button onclick="fetchComments('comments')">查询</button>
-    </div>
-    <div id="table-container">
-        <table id="commentsTable">
-            <thead>
+    <link rel="stylesheet" type="text/css" href="css/mobile_comment.css" media="screen and (max-width:1200px)" />
+    <link rel="stylesheet" type="text/css" href="css/pc_comment.css" media="screen and (min-width:1201px)" />
+    <script src="js/comment.js"></script>
+  </head>
+  <body onload="fetchComments('comments',1,10)">
+    <div class="app-container">
+      <div class="nav-container">
+        <div class="nav-container-box">
+          <div class="nav-li active" onclick="window.location.href='index.html'">评论展示</div>
+          <div class="nav-li" onclick="window.location.href='static.html'">评论统计</div>
+        </div>
+      </div>
+      <div class="search-container">
+        <div class="serach-li">
+          <p class="search-label">笔名昵称</p>
+          <input class="search-input" type="text" placeholder="请输入笔名昵称" id="wxNickName" />
+        </div>
+        <div class="serach-li">
+          <p class="search-label">小说标题</p>
+          <input class="search-input" type="text" placeholder="请输入小说标题" id="novelTitle" />
+        </div>
+        <div class="serach-li">
+          <p class="search-label">比赛届数</p>
+          <input class="search-input" type="number" placeholder="请输入比赛届数" id="numberOfRaces" />
+        </div>
+        <div class="serach-button">
+          <div class="search-btn" onclick="fetchComments('comments')">查询</div>
+        </div>
+      </div>
+      <div class="content-container">
+        <table class="table" id="commentsTable">
+          <thead>
             <tr>
-                <th>笔名</th>
-                <th>届数</th>
-                <th>标题</th>
-                <th>内容</th>
-                <th>时间</th>
+              <th>笔名</th>
+              <th>届数</th>
+              <th>标题</th>
+              <th>内容</th>
+              <th>时间</th>
             </tr>
-            </thead>
-            <tbody id="commentsBody">
-            <!-- Comments will be inserted here -->
-            </tbody>
+          </thead>
+          <tbody id="commentsBody">
+          </tbody>
         </table>
-    </div>
-    <div class="pagination">
-        <button onclick="previousPage()">上一页</button>
-        <span id="currentPage">1</span>
-        <button onclick="nextPage()">下一页</button>
-        <select id="pageSize" onchange="changePageSize()">
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-        </select>
-        <span id="totalPages">1</span>
-    </div>
+      </div>
+      <div class="pagination">
+          <svg class="page-btn" onclick="previousPage()" title="上一页" t="1726196926660" class="icon" viewBox="0 0 1034 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1615" width="45" height="45"><path d="M991.086864 5.527664l-295.105952 222.889692V27.281698a27.281698 27.281698 0 0 0-43.68638-21.754034L10.818 490.357322a27.281698 27.281698 0 0 0 0 43.508068l641.387377 484.651345a27.281698 27.281698 0 0 0 43.686379-21.754034V795.359576l295.105952 222.889692a27.281698 27.281698 0 0 0 43.68638-21.754034V27.281698a27.281698 27.281698 0 0 0-43.597224-21.754034z" fill="#467CFD" p-id="1616"></path></svg>
+          <span id="currentPage" hidden>1</span>
+          <div id="page-btns"></div>
+          <svg class="page-btn" onclick="nextPage()" title="下一页" t="1726196916145" class="icon" viewBox="0 0 1034 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1401" width="45" height="45"><path d="M43.692093 5.528387l295.144549 222.918844V27.285266A27.285266 27.285266 0 0 1 382.528736 5.528387L1024 490.421456a27.285266 27.285266 0 0 1 0 43.513758L382.528736 1018.471613a27.285266 27.285266 0 0 1-43.692094-21.756879V795.463602l-295.144549 222.918843a27.285266 27.285266 0 0 1-43.692093-21.667711V27.285266A27.285266 27.285266 0 0 1 43.692093 5.528387z" fill="#467CFD" p-id="1402"></path></svg>
+          <select id="pageSize" onchange="changePageSize()">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+          </select>
+          <span id="totalPages">1</span>
+      </div>
 
-</div>
-<script src="js/comment.js"></script>
-</body>
+    </div>
+  </body>
 </html>

@@ -1,133 +1,288 @@
-
-.toggleTab {
-    transform: scale(1.2);
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+* {
+  margin: 0;
+  padding: 0;
 }
 
-.tabButton {
-    padding: 10px 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 20px; /* 圆角 */
-    cursor: pointer;
-    margin: 0 40px; /* 按钮间距 */
-    transition: background-color 0.3s ease;
+body,
+html {
+  height: 100%;
 }
 
-.tabButton:hover {
-    background-color: #0056b3;
+/* layout all */
+
+.app-container {
+  height: 100%;
+  padding: 32px 150px;
+  box-sizing: border-box;
+  position: relative;
+  background: url(../img/pageBg.png) repeat;
 }
 
 
-.search {
-    transform: scale(1.2);
-    display: flex;
-    align-items: center;
-    justify-content: center; /* 将内容水平居中 */
-    margin-bottom: 20px; /* 底部间距 */
+/* nav start.. */
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.search label {
-    margin-right: 5px;
+.nav-container-box {
+  width: 100%;
+  height: 45px;
+  border-bottom: 2px solid #3670F6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
-.search input {
-    margin-right: 10px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+.nav-li {
+  width: 150px;
+  height: 100%;
+  font-weight: 500;
+  font-size: 24px;
+  color: #ffffff;
+  line-height: 45px;
+  text-align: center;
+  border: 2px solid #3670F6;
+  border-bottom: none;
+  border-right: none;
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
-.search button {
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
+.nav-li:nth-of-type(1) {
+  border-radius: 30px 0 0 0;
 }
 
-.sort-buttons {
-    margin-left: 10px;
+.nav-li:nth-of-type(2) {
+  border-radius: 0 30px 0 0;
 }
 
-.sort-buttons button {
-    padding: 5px 10px;
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-.sort-buttons button:hover {
-    background-color: #218838;
-}
-.result-buttons{
-    margin-left: 10px; /* 左侧间距 */
-}
-.tables-container {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 40px;
-    margin-top: 70px; /* 添加上边距 */
-}
-
-.table-wrapper {
-    flex: 1;
-    margin: 0 100px; /* Adjust spacing between tables */
-}
-
-/* 为表格添加分界线 */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    border: 1px solid #ddd;
-}
-
-th, td {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid #ddd; /* 在行之间添加分界线 */
-    border-right: 1px solid #ddd; /* 在列之间添加分界线 */
-}
-
-th {
-    background-color: #f2f2f2;
-    border-right: 1px solid #ddd; /* 在列之间添加分界线 */
-}
-
-/* 将分页显示改为蓝色 */
-.pagination {
-    width: 100%;
-    padding: 10px 0; /* 添加内边距以改善间距 */
-    text-align: center; /* 将页码居中显示 */
-}
-
-/* 为按钮添加样式 */
-.pagination-button {
-    background-color: #b3d4fc; /* 设置蓝色背景 */
-    color: #000; /* 设置黑色字体 */
-    padding: 8px 12px; /* 为按钮添加内边距 */
-    margin: 0 5px; /* 添加按钮之间的间距 */
-    cursor: pointer; /* 添加指针样式 */
-    border-radius: 50%; /* 圆形按钮 */
-    border: none; /* 移除边框 */
-}
-
-.pagination-button:hover {
-    background-color: #007bff; /* 鼠标悬停时改变背景色 */
-}
-.tableSpan {
-    display: block;
-    font-size: 20px;
-    text-align: center;
-    font-weight: bold;
-    margin-bottom: 15px; /* 下边距为15px */
-
+.nav-li.active {
+  background: linear-gradient(317deg, #19A1EE 0%, #010a18 100%);
+  color: #ffffff;
 }
 
 
+/* search start... */
+
+.search-container {
+  padding: 16px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+.serach-li {
+  display: flex;
+  align-items: center;
+  margin-right: 30px;
+}
+
+.search-label {
+  margin-right: 10px;
+  font-weight: 500;
+  font-size: 18px;
+  color: #ffffff;
+}
+
+.search-input {
+  opacity: 0.5;
+  border-radius: 10px;
+  width: 180px;
+  height: 30px;
+  border: 1px solid #222222;
+  outline: none;
+  padding: 0 5px;
+
+}
+
+.search-input:focus {
+  border: 1px solid #19A1EE;
+}
+
+.search-input::-webkit-outer-spin-button,
+.search-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+
+.search-btn {
+  width: 80px;
+  height: 34px;
+  background-color: #19A1EE;
+  border-radius: 10px;
+  text-align: center;
+  line-height: 34px;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.search-btn:hover {
+  opacity: 0.7;
+}
+
+
+.search-btn:active {
+  color: aliceblue;
+  background-color: #3670F6;
+}
+
+/* content start... */
+.content-container {
+  height: calc(100% - 110px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+
+.charts-box {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.charts-li {
+  position: absolute;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.charts-li .charts-li-content {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  /* background-color: #ffffff; */
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
+  padding: 20px 20px 40px;
+}
+
+.charts-li-content .svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.chart-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-title p {
+  color: #ffffff;
+}
+
+.charts-li .charts-li-content:hover {
+  /* box-shadow: 0px 8px 40px 0px rgba(0,0,0,0.2); */
+}
+
+.charts-li:nth-of-type(1) {
+  width: 50%;
+  height: 50%;
+  left: 0;
+  top: 0;
+}
+
+.charts-li:nth-of-type(2) {
+  width: 50%;
+  height: 50%;
+  left: 0;
+  bottom: 0;
+}
+
+.charts-li:nth-of-type(3) {
+  width: 50%;
+  height: 100%;
+  right: 0;
+  bottom: 0;
+}
+
+.chart-dom {
+  width: 100%;
+  height: calc(100% - 61px);
+  position: relative;
+  padding-right: 20px;
+  box-sizing: border-box;
+  z-index: 10;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+
+.chart-dom:hover {
+  overflow-y: auto;
+}
+
+
+.chart-dom::-webkit-scrollbar {
+  width: 8px;
+  position: absolute;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #ffffff;
+  border-radius: 4px;
+}
+
+.chart-dom::-webkit-scrollbar-thumb {
+  background-color: #19A1EE;
+  border-radius: 4px;
+}
+
+.chart-footer{
+  width: calc(100% - 60px);
+  height: 40px;
+  padding-left: 130px;
+  box-sizing: border-box;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.bar-chart-li {
+  height: 26px;
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+}
+
+.bar-chart-title {
+  width: 120px;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bar-chart-box {
+  width: calc(100% - 160px);
+  position: relative;
+  margin-left: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 3px #999;
+  display: flex;
+  align-items: center;
+}
+
+.bar-chart-container {
+  width: 0;
+  height: 10px;
+  border-radius: 5px;
+  transition: all 0.5s;
+}
+
+.bar-chart-count {
+  position: absolute;
+  right: -35px;
+  top: 0;
+  font-size: 14px;
+  line-height: 14px;
+}

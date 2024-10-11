@@ -1,164 +1,255 @@
-
-.toggleTab {
-    transform: scale(1.2);
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+* {
+  margin: 0;
+  padding: 0;
 }
 
-.tabButton {
-    padding: 10px 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 20px; /* 圆角 */
-    cursor: pointer;
-    margin: 0 40px; /* 按钮间距 */
-    transition: background-color 0.3s ease;
+body,
+html {
+  height: 100%;
 }
 
-.tabButton:hover {
-    background-color: #0056b3;
+/* layout all */
+
+.app-container {
+  height: 100%;
+  padding: 32px 150px;
+  box-sizing: border-box;
+  position: relative;
+  background: url(../img/pageBg.png) repeat;
 }
 
 
-.search {
-    transform: scale(1.2);
-    display: flex;
-    align-items: center;
-    justify-content: center; /* 将内容水平居中 */
-    margin-bottom: 20px; /* 底部间距 */
-
+/* nav start.. */
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.search label {
-    margin-right: 5px;
+.nav-container-box {
+  width: 100%;
+  height: 45px;
+  border-bottom: 2px solid #3670F6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
-.search input {
-    margin-right: 10px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+.nav-li {
+  width: 150px;
+  height: 100%;
+  font-weight: 500;
+  font-size: 24px;
+  color: #ffffff;
+  line-height: 45px;
+  text-align: center;
+  border: 2px solid #3670F6;
+  border-bottom: none;
+  border-left: none;
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
-.search button {
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
+.nav-li:nth-of-type(1) {
+  border-radius: 30px 0 0 0;
 }
 
-.sort-buttons {
-    margin-left: 10px; /* 左侧间距 */
+.nav-li:nth-of-type(2) {
+  border-radius: 0 30px 0 0;
 }
 
-.sort-buttons button {
-    padding: 5px 10px;
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
+.nav-li.active {
+  background: linear-gradient(317deg, #010a18 0%, #19A1EE 100%);
+  color: #ffffff;
 }
 
-.sort-buttons button:hover {
-    background-color: #218838;
+
+/* search start... */
+
+.search-container {
+  padding: 16px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
 }
 
-/* 包裹容器居中显示 */
-.table-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 100px;
+.serach-li {
+  display: flex;
+  align-items: center;
+  margin-right: 30px;
 }
 
-/* 表格样式 */
-#commentsTable {
-    width: 80%;
-    border-collapse: collapse;
-    border-spacing: 0;
-    margin: 0 auto; /* 将左右边距设置为自动以实现居中 */
-    border: 1px solid #ddd; /* 表格外边框 */
+.search-label {
+  margin-right: 10px;
+  font-weight: 500;
+  font-size: 18px;
+  color: #ffffff;
 }
 
-#commentsTable th,
-#commentsTable td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd; /* 每行底部边框 */
-    border-right: 1px solid #ddd; /* 每列右侧边框 */
-    text-align: center;
+.search-input {
+  opacity: 0.5;
+  border-radius: 10px;
+  width: 180px;
+  height: 30px;
+  border: 1px solid #222222;
+  outline: none;
+  padding: 0 5px;
 }
 
-#commentsTable th {
-    background-color: #d9edf7; /* 浅蓝色 */
-    font-weight: bold;
-    border-top: 1px solid #ddd; /* 表头顶部边框 */
+.search-input:focus {
+  border: 1px solid #19A1EE;
 }
 
-#commentsTable td {
-    background-color: #ffffff; /* 白色 */
+.search-input::-webkit-outer-spin-button,
+.search-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }
 
-/* 为每个表头单元格设置固定宽度 */
-#commentsTable th:nth-child(1),
-#commentsTable th:nth-child(2),
-#commentsTable th:nth-child(3),
-#commentsTable th:nth-child(5) {
-    width: 10%; /* 根据需要调整宽度 */
+
+.search-btn {
+  width: 80px;
+  height: 34px;
+  background-color: #19A1EE;
+  border-radius: 10px;
+  text-align: center;
+  line-height: 34px;
+  cursor: pointer;
+  color: #ffffff;
 }
 
-#commentsTable th:nth-child(4) {
-    width: 50%; /* 根据需要调整宽度 */
+.search-btn:hover {
+  opacity: 0.7;
 }
 
-/* 交替行颜色 */
-#commentsTable tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+
+.search-btn:active {
+  color: aliceblue;
+  background-color: #3670F6;
 }
 
-/* 悬停效果 */
-#commentsTable tbody tr:hover {
-    background-color: #e6f7ff;
+
+/* content start... */
+.content-container {
+  height: calc(100% - 162px);
 }
 
-.pagination {
-    transform: scale(1.2);
-    margin-top: 20px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 添加轻微阴影 */
+.content-container .table {
+  width: 100%;
+  height: 100%;
+  border-collapse: collapse;
+  opacity: 0.5;
+  border-radius: 5px;
 }
 
-.pagination button {
-    padding: 5px 10px;
-    margin: 0 5px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* 添加背景色过渡效果 */
+
+.content-container .table thead,
+.content-container .table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
 }
 
-.pagination button:hover {
-    background-color: #0056b3; /* 鼠标悬停时的背景色 */
+
+
+.content-container .table th {
+  width: 12%;
+  height: 45px;
+  background-color: #E8F3FF;
+  line-height: 45px;
+  text-align: center;
+  /* text-indent: 2em; */
+  border-right: 1px solid #FFFFFF;
 }
 
-.pagination select {
-    padding: 5px;
-    margin: 0 5px;
-    border: 1px solid #ddd; /* 添加边框 */
-    border-radius: 3px; /* 统一边框圆角 */
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* 添加轻微阴影 */
+
+.content-container .table th:nth-of-type(4) {
+  width: 52%;
 }
 
-.pagination span {
-    border: 1px solid #ddd; /* 添加边框 */
-    border-radius: 3px; /* 统一边框圆角 */
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* 添加轻微阴影 */
-    margin: 0 5px;
-    font-weight: bold; /* 增加字体粗细 */
+.content-container .table th:nth-of-type(5) {
+  border-right: none;
 }
 
+
+.content-container .table tbody {
+  width: 100%;
+  height: calc(100% - 45px);
+  display: block;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.content-container .table tbody tr td {
+  width: 12%;
+  text-align: center;
+  border-right: 1px solid #E5E6EB;
+  padding: 6px 2px;
+  font-weight: 400;
+  font-size: 16px;
+  color: #222429;
+  box-sizing: border-box;
+}
+
+.content-container .table tbody tr {
+  background-color: #ffffff;
+}
+
+.content-container .table tbody tr td:nth-of-type(4) {
+  width: 52%;
+}
+
+.content-container .table tbody tr:nth-of-type(odd) {
+  background-color: #F7F8FA;
+  border-bottom: 1px solid #F2F3F5;
+}
+
+.content-container .table tbody tr:last-of-type {
+  border-bottom: 1px solid #F2F3F5;
+}
+
+.pagination{
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  user-select: none;
+}
+
+#page-btns{
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+}
+
+#page-btns span{
+  margin: 0 5px;
+  width: 34px;
+  height: 34px;
+  text-align: center;
+  line-height: 34px;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.page-active{
+  color: #ffffff;
+  background-color: #3670F6;
+  border-radius: 4px;
+}
+
+#totalPages{
+  color: #ffffff;
+}
+
+.page-btn{
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+
+#pageSize{
+  margin: 0 10px;
+  opacity: 0.5;
+}

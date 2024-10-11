@@ -90,6 +90,8 @@ html {
   border: 1px solid #222222;
   outline: none;
   padding: 0 5px;
+  opacity: 0.5;
+  border-radius: 10px;
 }
 
 .search-input:focus {
@@ -106,7 +108,7 @@ html {
   width: 100%;
   height: 34px;
   background-color: #19A1EE;
-  border-radius: 2px;
+  border-radius: 10px;
   text-align: center;
   line-height: 34px;
   cursor: pointer;
@@ -212,4 +214,8 @@ html {
   top: 0;
   font-size: 14px;
   line-height: 14px;
+}
+
+#pageSize{
+  opacity: 0.5;
 }

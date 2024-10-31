@@ -2,11 +2,19 @@ let currentPage = 1;
 let pageSize = 10;
 let timer = null
 
-function fetchComments(interfaceName, page, pageSize) {
+async function loadConfig() {
+  const response = await fetch('config.json');
+  if (!response.ok) {
+    throw new Error('无法加载配置文件');
+  }
+  return response.json();
+}
+async function fetchComments(interfaceName, page, pageSize) {
+  const config = await loadConfig();
   const wxNickName = document.getElementById('wxNickName').value;
   const novelTitle = document.getElementById('novelTitle').value;
   const numberOfRaces = document.getElementById('numberOfRaces').value;
-  let url = `http://114.55.235.157:8888/api/${interfaceName}?page=${page}&pageSize=${pageSize}`;
+  let url = `${config.apiBaseUrl}${interfaceName}?page=${page}&pageSize=${pageSize}`;
 
   if (wxNickName.trim() !== '') {
     url += `&wxNickName=${wxNickName}`;

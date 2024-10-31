@@ -5,17 +5,26 @@ const chartData = {
 }
 let timer = null
 
-function fetchComments(interfaceName, sortType, limit) {
+async function loadConfig() {
+  const response = await fetch('config.json');
+  if (!response.ok) {
+    throw new Error('无法加载配置文件');
+  }
+  return response.json();
+}
+
+async function fetchComments(interfaceName, sortType, limit) {
   for (let key in chartData) {
     if (chartData[key].timer) {
       clearInterval(chartData[key].timer)
       chartData[key].timer = null
     }
   }
+  const config = await loadConfig();
   const wxNickName = document.getElementById('wxNickName').value;
   const novelTitle = document.getElementById('novelTitle').value;
   const numberOfRaces = document.getElementById('numberOfRaces').value;
-  let url = 'http://114.55.235.157:8888/api/' + interfaceName + '?';
+  let url = `${config.apiBaseUrl}${interfaceName}?`;
   const groupTypeValues = [1, 2, 3]; // GroupType的三种取值
 
   // 定义一个数组来收集所有的 Promise
@@ -38,32 +47,32 @@ function fetchComments(interfaceName, sortType, limit) {
 
     // 将 fetch 请求的结果加入到 promises 数组中
     promises.push(
-      fetch(currentUrl)
-      .then(response => response.json())
-      .then(data => {
-        if (groupType === 1) {
-          chartData.data1 = {
-            title: '评论者排名',
-            data: data ? data : [],
-            type: 0,
-            index: 1
-          };
-        } else if (groupType === 2) {
-          chartData.data2 = {
-            title: '小说被评排名',
-            data: data ? data : [],
-            type: 1,
-            index: 1
-          };
-        } else if (groupType === 3) {
-          chartData.data3 = {
-            title: '历届评论排名',
-            data: data ? data : [],
-            type: 2,
-            index: 1
-          };
-        }
-      })
+        fetch(currentUrl)
+            .then(response => response.json())
+            .then(data => {
+              if (groupType === 1) {
+                chartData.data1 = {
+                  title: '评论者排名',
+                  data: data ? data : [],
+                  type: 0,
+                  index: 1
+                };
+              } else if (groupType === 2) {
+                chartData.data2 = {
+                  title: '小说被评排名',
+                  data: data ? data : [],
+                  type: 1,
+                  index: 1
+                };
+              } else if (groupType === 3) {
+                chartData.data3 = {
+                  title: '历届评论排名',
+                  data: data ? data : [],
+                  type: 2,
+                  index: 1
+                };
+              }
+            })
     );
   });
 

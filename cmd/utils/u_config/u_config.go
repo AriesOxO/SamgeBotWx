@@ -5,15 +5,15 @@ import (
 	"SamgeWxApi/cmd/utils/u_str"
 	"encoding/json"
 	"fmt"
+	"github.com/deckarep/golang-set/v2"
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 )
 
-var NumberOfRaces int = 999
 var BotEnable int = 1
-var superPwd string = "密码就是我不告诉你"
 
 const (
 	BotCacheDir      = "tmp/wxBotCache/botCacheFile"
@@ -61,8 +61,13 @@ func NeedParseCmd(name string, content string) bool {
 	return IsManagerUser(name) && IsCmdContent(content)
 }
 
+func ValidTitle(title string) bool {
+	return config.NovelCatalogueSet.Contains(title)
+}
+
 // Configuration 项目配置
 type Configuration struct {
+	NovelCatalogueSet mapset.Set[string]
 	BaseUrl string `json:"base_url"` // openai的请求地址，需要携带v1版本号，默认是：${DefaultBaseUrl} ，可配置转发地址/本地部署的模型api地址
 	BotDesc string `json:"bot_desc"` // 机器人引导描述词
 
@@ -81,7 +86,9 @@ type Configuration struct {
 	WebPort       string `json:"web_port"`
 	SqliteUrl     string `json:"sql_ite_url"`
 	CommentGroups string `json:"comment_groups"`
-	EnableReply   bool   `json:"enable_reply"`
+	EnableReply    bool   `json:"enable_reply"`
+	NovelCatalogue string `json:"novel_catalogue"`
+	CompetitionNumber  int  `json:"competition_number"`
 }
 
 var config *Configuration
@@ -94,7 +101,6 @@ func LoadConfig() *Configuration {
 		config = &Configuration{
 			BaseUrl: DefaultBaseUrl,
 			BotDesc: "",
-
 			ApiKey:           "",
 			Model:            DefaultModel,
 			MaxTokens:        60,
@@ -109,6 +115,8 @@ func LoadConfig() *Configuration {
 			WebPort:          "8887",
 			SqliteUrl:        "./webot.db",
 			EnableReply:      true,
+			NovelCatalogue:   "",
+			NovelCatalogueSet: mapset.NewSet[string](),
 		}
 
 		// 判断配置文件是否存在，存在直接JSON读取
@@ -130,6 +138,8 @@ func LoadConfig() *Configuration {
 			}
 		}
 
+		// 数据优化，解析数据并赋值到Set中
+		config.NovelCatalogueSet = mapset.NewSet[string](strings.Split(config.NovelCatalogue, "|")...)
 		// 如果存在环境变量，则优先使用使用环境变量
 
 		BaseUrl := os.Getenv("sg.samge_wx_bot.base_url")
@@ -226,9 +236,26 @@ func LoadConfig() *Configuration {
 		if EnableReply != "" {
 			config.EnableReply = EnableReply == "true"
 		}
-
 		fmt.Printf("config.EnableReply=%v\n", config.EnableReply)
-	})
+		CompetitionNumber := os.Getenv("sg.samge_wx_bot.competition_number")
+		if CompetitionNumber != "" {
+			number, err := strconv.Atoi(CompetitionNumber)
+			if err != nil {
+				log.Fatalf(fmt.Sprintf("config CompetitionNumber err: %v ,get is %v", err, CompetitionNumber))
+				return
+			}
+			config.CompetitionNumber = number
+		}
+		fmt.Printf("config.CompetitionNumber=%v\n", config.CompetitionNumber)
 
+		NovelCatalogue := os.Getenv("sg.samge_wx_bot.novel_catalogue")
+		if NovelCatalogue != "" {
+			config.NovelCatalogue = NovelCatalogue
+			fmt.Printf("config.NovelCatalogue=%v\n", NovelCatalogue)
+			config.NovelCatalogueSet = mapset.NewSet[string](strings.Split(NovelCatalogue, "|")...)
+		}
+		fmt.Printf("config.NovelCatalogueSet=%v\n", config.NovelCatalogueSet.ToSlice())
+	})
 	return config
 }
+

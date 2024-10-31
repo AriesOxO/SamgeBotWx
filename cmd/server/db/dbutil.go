@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"log"
+	"time"
 )
 
 // Comment 对应数据库中的 comment 表
@@ -38,13 +39,23 @@ type CommentStatic struct {
 }
 
 var DB *gorm.DB
-
 func InitDB() error {
 	var err error
 	DB, err = gorm.Open(sqlite.Open(config.LoadConfig().SqliteUrl), &gorm.Config{Logger: logger.Default.LogMode(logger.Error)})
 	if err != nil {
 		return err
 	}
+	log.Println("数据库初始化成功" )
+	sqlDB, err := DB.DB()
+	if err != nil {
+		return fmt.Errorf("failed to get database instance: %w", err)
+	}
+	// 设置连接池参数
+	sqlDB.SetMaxIdleConns(100)              // 设置空闲连接池中连接的最大数量
+	sqlDB.SetMaxOpenConns(1000)             // 设置打开数据库连接的最大数量
+	sqlDB.SetConnMaxLifetime(time.Hour)    // 设置连接可复用的最大时间
+	sqlDB.SetConnMaxIdleTime(5 * time.Minute) // 设置连接在空闲状态下的最大存活时间
+
 	// 添加成功日志
 	log.Println("Database connected and migrated successfully.")
 	return nil
@@ -185,3 +196,4 @@ func FindUniqueComment(wxNickName string, number int, novelTitle string) (*Comme
 	}
 	return comment, nil
 }
+

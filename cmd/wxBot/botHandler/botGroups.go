@@ -87,7 +87,7 @@ func FeiBang(ctx *openwechat.MessageContext) {
 			CreateTime:  time.Now().Format(time.DateTime),
 			UpdateTime:  time.Now().Format(time.DateTime),
 		}
-		if !config.ValidTitle(matches[2]) {
+		if !config.ValidTitle(newComment.NovelTitle) {
 			ctx.ReplyText("您的评论小说标题【"+matches[2]+"】写错了噢，请检查一下重新评论(⊙o⊙)？@" + sender.NickName)
 			return
 		}

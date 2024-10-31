@@ -75,7 +75,7 @@ func FeiBang(ctx *openwechat.MessageContext) {
 			return
 		}
 		if strutil.GetStrLength(matches[3]) < 50 {
-			ctx.ReplyText("评论内容过少，本少爷不收@" + sender.NickName)
+			ctx.ReplyText("评论内容过少，少爷我不收哦@" + sender.NickName)
 			return
 		}
 		newComment := &db.Comment{

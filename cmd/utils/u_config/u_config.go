@@ -5,6 +5,7 @@ import (
 	"SamgeWxApi/cmd/utils/u_str"
 	"encoding/json"
 	"fmt"
+	"github.com/deckarep/golang-set/v2"
 	"log"
 	"os"
 	"strconv"
@@ -61,11 +62,12 @@ func NeedParseCmd(name string, content string) bool {
 }
 
 func ValidTitle(title string) bool {
-	return strings.Contains(config.NovelCatalogue,title)
+	return config.NovelCatalogueSet.Contains(title)
 }
 
 // Configuration 项目配置
 type Configuration struct {
+	NovelCatalogueSet mapset.Set[string]
 	BaseUrl string `json:"base_url"` // openai的请求地址，需要携带v1版本号，默认是：${DefaultBaseUrl} ，可配置转发地址/本地部署的模型api地址
 	BotDesc string `json:"bot_desc"` // 机器人引导描述词
 
@@ -114,6 +116,7 @@ func LoadConfig() *Configuration {
 			SqliteUrl:        "./webot.db",
 			EnableReply:      true,
 			NovelCatalogue:   "",
+			NovelCatalogueSet: mapset.NewSet[string](),
 		}
 
 		// 判断配置文件是否存在，存在直接JSON读取
@@ -135,6 +138,8 @@ func LoadConfig() *Configuration {
 			}
 		}
 
+		// 数据优化，解析数据并赋值到Set中
+		config.NovelCatalogueSet = mapset.NewSet[string](strings.Split(config.NovelCatalogue, "|")...)
 		// 如果存在环境变量，则优先使用使用环境变量
 
 		BaseUrl := os.Getenv("sg.samge_wx_bot.base_url")
@@ -244,10 +249,12 @@ func LoadConfig() *Configuration {
 		fmt.Printf("config.CompetitionNumber=%v\n", config.CompetitionNumber)
 
 		NovelCatalogue := os.Getenv("sg.samge_wx_bot.novel_catalogue")
-		if EnableReply != "" {
+		if NovelCatalogue != "" {
 			config.NovelCatalogue = NovelCatalogue
+			fmt.Printf("config.NovelCatalogue=%v\n", NovelCatalogue)
+			config.NovelCatalogueSet = mapset.NewSet[string](strings.Split(NovelCatalogue, "|")...)
 		}
-		fmt.Printf("config.NovelCatalogue=%v\n", config.NovelCatalogue)
+		fmt.Printf("config.NovelCatalogueSet=%v\n", config.NovelCatalogueSet.ToSlice())
 	})
 	return config
 }

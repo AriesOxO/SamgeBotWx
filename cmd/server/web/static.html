@@ -29,6 +29,10 @@
           <p class="search-label">比赛届数</p>
           <input class="search-input" type="number" placeholder="请输入比赛届数" id="numberOfRaces" />
         </div>
+        <!-- 新增的排序切换按钮 -->
+        <div class="sort-button">
+          <div class="sort-btn" id="sort-btn" onclick="toggleSort()">倒序</div>
+        </div>
         <div class="serach-button">
           <div class="search-btn" onclick="fetchComments('static', 2, 20)">查询</div>
         </div>

@@ -208,7 +208,7 @@ html {
   border-bottom: 1px solid #F2F3F5;
 }
 
-.pagination{
+.pagination {
   width: 100%;
   height: 60px;
   display: flex;
@@ -217,13 +217,13 @@ html {
   user-select: none;
 }
 
-#page-btns{
+#page-btns {
   display: flex;
   align-items: center;
   margin: 0 10px;
 }
 
-#page-btns span{
+#page-btns span {
   margin: 0 5px;
   width: 34px;
   height: 34px;
@@ -233,23 +233,27 @@ html {
   color: #ffffff;
 }
 
-.page-active{
+.page-active {
   color: #ffffff;
   background-color: #3670F6;
   border-radius: 4px;
 }
 
-#totalPages{
+#totalPages {
   color: #ffffff;
 }
 
-.page-btn{
+.page-btn {
   width: 25px;
   height: 25px;
   cursor: pointer;
 }
 
-#pageSize{
+#pageSize {
   margin: 0 10px;
   opacity: 0.5;
+}
+
+.serach-button+.serach-button {
+  margin-left: 15px;
 }

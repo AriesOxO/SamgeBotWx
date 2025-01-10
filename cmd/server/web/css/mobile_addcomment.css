@@ -1,0 +1,138 @@
+/* 添加全局样式确保背景铺满 */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    width: 100%;
+    background: url(../img/pageBg.png) repeat;
+}
+
+.app-container {
+    min-height: 100vh;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    background: transparent;
+    /* 移除容器的背景，使用body的背景 */
+}
+
+.form-container {
+    margin: 20px auto;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-item {
+    margin-bottom: 15px;
+}
+
+.form-item label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.form-item input,
+.form-item textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #3670F6;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.8);
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.form-item textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+.error-msg {
+    color: #ff4444;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.char-count {
+    color: #ffffff;
+    font-size: 12px;
+    float: right;
+    margin-top: 3px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 10px;
+    background: #3670F6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.submit-btn:active {
+    background: #19A1EE;
+}
+
+/* 禁用状态的按钮样式 */
+.submit-btn:disabled {
+    background-color: #cccccc !important;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* 移动端导航样式 */
+@media screen and (max-width: 768px) {
+    .nav-container-box {
+        height: 40px;
+        justify-content: flex-start;
+        /* 左对齐 */
+        padding: 0 15px;
+        /* 添加左右内边距 */
+    }
+
+    .nav-li {
+        width: auto;
+        /* 自适应宽度 */
+        min-width: 80px;
+        /* 最小宽度 */
+        padding: 0 15px;
+        /* 左右内边距 */
+        font-size: 14px;
+        /* 更小的字体 */
+        line-height: 40px;
+        white-space: nowrap;
+        /* 文字不换行 */
+    }
+
+    .nav-li:nth-of-type(1) {
+        border-radius: 20px 0 0 0;
+        /* 调整圆角 */
+    }
+
+    .nav-li:nth-of-type(2) {
+        border-radius: 0 20px 0 0;
+        /* 调整圆角 */
+    }
+
+    /* 确保激活状态的样式正确 */
+    .nav-li.active {
+        background: linear-gradient(317deg, #19A1EE 0%, #010a18 100%);
+        color: #ffffff;
+    }
+
+    .app-container {
+        padding: 15px;
+    }
+
+    .form-container {
+        margin-top: 20px;
+    }
+}

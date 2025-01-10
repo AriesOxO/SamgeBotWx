@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>增加评论</title>
+    <link rel="stylesheet" type="text/css" href="css/mobile_addcomment.css" media="screen and (max-width:1200px)" />
+    <link rel="stylesheet" type="text/css" href="css/pc_addcomment.css" media="screen and (min-width:1201px)" />
+    <script src="js/addcomment.js"></script>
+  </head>
+  <body>
+    <div class="app-container">
+      <div class="form-container">
+        <div class="form-item">
+          <label>笔者昵称：</label>
+          <input type="text" id="wxNickName" placeholder="请输入笔者昵称">
+        </div>
+        <div class="form-item">
+          <label>小说名称：</label>
+          <input type="text" id="novelTitle" placeholder="请输入小说名称（不含书名号）">
+          <span class="error-msg" id="novelTitleError"></span>
+        </div>
+        <div class="form-item">
+          <label>比赛届数：</label>
+          <input type="number" id="number" placeholder="请输入比赛届数" readonly>
+        </div>
+        <div class="form-item">
+          <label>评论内容：</label>
+          <textarea id="commentText" placeholder="请输入评论内容（至少50个字）" oninput="updateCharCount()"></textarea>
+          <span class="char-count" id="charCount">0/50</span>
+        </div>
+        <div class="form-item">
+          <button id="submitBtn" onclick="submitComment()" class="submit-btn" disabled>提交评论</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

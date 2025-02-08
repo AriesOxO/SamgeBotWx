@@ -53,16 +53,16 @@ function validateInput() {
 }
 
 // 页面加载时获取配置
-document.addEventListener('DOMContentLoaded', async function () {
-    try {
-        const response = await fetch('config.json');
-        const config = await response.json();
-        document.getElementById('number').value = config.number;
-    } catch (error) {
-        console.error('加载配置文件失败:', error);
-    }
-
-});
+// document.addEventListener('DOMContentLoaded', async function () {
+//     try {
+//         const response = await fetch('config.json');
+//         const config = await response.json();
+//         document.getElementById('number').value = config.number;
+//     } catch (error) {
+//         console.error('加载配置文件失败:', error);
+//     }
+//
+// });
 
 // 更新字数统计
 function updateCharCount() {

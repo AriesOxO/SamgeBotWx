@@ -108,8 +108,20 @@ html {
 }
 
 
+.sort-btn {
+  width: 60px;
+  height: 34px;
+  background-color: #19A1EE;
+  border-radius: 10px;
+  text-align: center;
+  line-height: 34px;
+  cursor: pointer;
+  color: #ffffff;
+  margin-right: 10px;
+}
+
 .search-btn {
-  width: 80px;
+  width: 60px;
   height: 34px;
   background-color: #19A1EE;
   border-radius: 10px;
@@ -118,12 +130,12 @@ html {
   cursor: pointer;
   color: #ffffff;
 }
-
+.sort-btn:hover,
 .search-btn:hover {
   opacity: 0.7;
 }
 
-
+.sort-btn:active,
 .search-btn:active {
   color: aliceblue;
   background-color: #3670F6;

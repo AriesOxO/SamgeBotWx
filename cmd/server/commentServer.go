@@ -2,13 +2,16 @@ package server
 
 import (
 	"SamgeWxApi/cmd/server/db"
+	config "SamgeWxApi/cmd/utils/u_config"
 	"database/sql"
 	"fmt"
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"strconv"
+	"time"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 func StartApiServer() {
@@ -142,6 +145,148 @@ func StartApiServer() {
 			})
 		}
 		c.JSON(http.StatusOK, result)
+	})
+	// 检查评论是否重复
+	r.POST("/api/checkcomment", func(c *gin.Context) {
+		var comment db.Comment
+		if err := c.ShouldBindJSON(&comment); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request data"})
+			return
+		}
+
+		var existingComment db.Comment
+		result := db.DB.Where("wx_nick_name = ? AND number = ? AND novel_title = ?",
+			comment.WxNickName, comment.Number, comment.NovelTitle).First(&existingComment)
+
+		if result.Error == nil {
+			c.JSON(http.StatusOK, gin.H{
+				"exists":  true,
+				"message": "评论已存在",
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"exists":  false,
+			"message": "评论不存在",
+		})
+	})
+
+	// 检查小说名称是否存在
+	r.GET("/api/checknovel", func(c *gin.Context) {
+		number := c.Query("number")
+		novelTitle := c.Query("novelTitle")
+
+		if number == "" || novelTitle == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Missing required parameters"})
+			return
+		}
+
+		isValid := config.ValidTitle(novelTitle)
+		if !isValid {
+			c.JSON(http.StatusOK, gin.H{
+				"exists":  false,
+				"message": "小说名称不存在",
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"exists":  true,
+			"message": "小说名称有效",
+		})
+	})
+
+	// 增加评论接口
+	r.POST("/api/addcomments", func(c *gin.Context) {
+		var newComment db.Comment
+		if err := c.ShouldBindJSON(&newComment); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		// 设置创建时间和修改时间
+		now := time.Now()
+		newComment.CreateTime = now.Format("2006-01-02 15:04:05")
+		newComment.UpdateTime = now.Format("2006-01-02 15:04:05")
+
+		// 创建评论
+		if err := db.DB.Create(&newComment).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create comment"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Comment created successfully",
+			"data":    newComment,
+		})
+	})
+
+	// 删除评论接口
+	r.DELETE("/api/comments/:id", func(c *gin.Context) {
+		id := c.Param("id")
+
+		// 检查评论是否存在
+		var comment db.Comment
+		if err := db.DB.First(&comment, id).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": "评论不存在",
+			})
+			return
+		}
+
+		// 删除评论
+		if err := db.DB.Delete(&comment).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "删除评论失败",
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "评论删除成功",
+		})
+	})
+
+	// 修改评论接口
+	r.PUT("/api/comments/:id", func(c *gin.Context) {
+		id := c.Param("id")
+
+		// 检查评论是否存在
+		var existingComment db.Comment
+		if err := db.DB.First(&existingComment, id).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": "评论不存在",
+			})
+			return
+		}
+
+		// 解析请求体中的新数据
+		var updatedComment db.Comment
+		if err := c.ShouldBindJSON(&updatedComment); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "无效的请求数据",
+			})
+			return
+		}
+
+		// 更新评论
+		// 只更新内容字段，保留其他字段不变
+		if err := db.DB.Model(&existingComment).Updates(map[string]interface{}{
+			"comment":      updatedComment.CommentText,
+			"wx_nick_name": updatedComment.WxNickName,
+			// 可以根据需要添加其他允许修改的字段
+		}).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "更新评论失败",
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "评论更新成功",
+			"data":    existingComment,
+		})
 	})
 
 	// 定义获取ReadMe的API接口

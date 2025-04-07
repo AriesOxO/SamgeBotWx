@@ -3,6 +3,7 @@ const chartData = {
   data2: {timer: null},
   data3: {timer: null}
 }
+let currentSortType = 2; // 默认排序类型
 let timer = null
 
 async function loadConfig() {
@@ -43,7 +44,7 @@ async function fetchComments(interfaceName, sortType, limit) {
     }
     // currentUrl += `&sortType=${sortType}`;
     currentUrl += `&groupType=${groupType}`;
-    currentUrl += `&sortType=2`; // 假设sortType始终为1
+    currentUrl += `&sortType=${sortType}`; // 假设sortType始终为1
 
     // 将 fetch 请求的结果加入到 promises 数组中
     promises.push(
@@ -87,6 +88,16 @@ async function fetchComments(interfaceName, sortType, limit) {
   });
 }
 
+function toggleSort() {
+  // 切换排序类型
+  currentSortType = currentSortType === 2 ? 1 : 2;
+
+  // 更新按钮文字
+  document.getElementById('sort-btn').textContent = currentSortType === 2 ? '升序' : '倒序';
+
+  // 使用新的排序类型进行查询
+  fetchComments('static', currentSortType, 20);
+}
 
 function createSvgDom() {
   for (let i = 0; i < 3; i++) {

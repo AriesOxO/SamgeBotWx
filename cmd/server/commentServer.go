@@ -198,6 +198,14 @@ func StartApiServer() {
 	})
 
 	// 增加评论接口
+	r.GET("/api/getSeason", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "获取当前赛季成功",
+			"data":    config.LoadConfig().CompetitionNumber,
+		})
+	})
+
+	// 增加评论接口
 	r.POST("/api/addcomments", func(c *gin.Context) {
 		var newComment db.Comment
 		if err := c.ShouldBindJSON(&newComment); err != nil {
@@ -209,6 +217,7 @@ func StartApiServer() {
 		now := time.Now()
 		newComment.CreateTime = now.Format("2006-01-02 15:04:05")
 		newComment.UpdateTime = now.Format("2006-01-02 15:04:05")
+		//newComment.Number = config.LoadConfig().CompetitionNumber
 
 		// 创建评论
 		if err := db.DB.Create(&newComment).Error; err != nil {

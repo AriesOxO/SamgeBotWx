@@ -298,5 +298,131 @@ func StartApiServer() {
 		})
 	})
 
+	// Config 配置表API
+	r.GET("/api/configs", func(c *gin.Context) {
+		configs, err := db.GetConfigs()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, configs)
+	})
+	r.POST("/api/configs", func(c *gin.Context) {
+		var configs []db.Config
+		if err := c.ShouldBindJSON(&configs); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		if err := db.CreateConfigs(configs); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "批量新增成功"})
+	})
+	r.PUT("/api/configs", func(c *gin.Context) {
+		var configs []db.Config
+		if err := c.ShouldBindJSON(&configs); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		if err := db.UpdateConfigs(configs); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "批量更新成功"})
+	})
+	r.DELETE("/api/configs", func(c *gin.Context) {
+		var ids []uint
+		if err := c.ShouldBindJSON(&ids); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		if err := db.DeleteConfigs(ids); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "批量删除成功"})
+	})
+
+	// Novel 小说表API
+	r.GET("/api/novels", func(c *gin.Context) {
+		novels, err := db.GetNovels()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, novels)
+	})
+	r.POST("/api/novels", func(c *gin.Context) {
+		var novels []db.Novel
+		if err := c.ShouldBindJSON(&novels); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		if err := db.CreateNovels(novels); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "批量新增成功"})
+	})
+	r.PUT("/api/novels", func(c *gin.Context) {
+		var novels []db.Novel
+		if err := c.ShouldBindJSON(&novels); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		if err := db.UpdateNovels(novels); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "批量更新成功"})
+	})
+	r.DELETE("/api/novels", func(c *gin.Context) {
+		var ids []uint
+		if err := c.ShouldBindJSON(&ids); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		if err := db.DeleteNovels(ids); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "批量删除成功"})
+	})
+
+	// 评论分页接口，支持多条件筛选
+	r.GET("/api/comments/paged", func(c *gin.Context) {
+		page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+		pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "20"))
+		if page < 1 {
+			page = 1
+		}
+		if pageSize < 1 {
+			pageSize = 20
+		}
+		offset := (page - 1) * pageSize
+		filters := map[string]interface{}{}
+		if wxNickName := c.Query("wxNickName"); wxNickName != "" {
+			filters["wx_nick_name LIKE ?"] = "%" + wxNickName + "%"
+		}
+		if novelTitle := c.Query("novelTitle"); novelTitle != "" {
+			filters["novel_title LIKE ?"] = "%" + novelTitle + "%"
+		}
+		if number := c.Query("number"); number != "" {
+			filters["number = ?"] = number
+		}
+		comments, total, err := db.GetCommentsPaged(offset, pageSize, filters)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"total":    total,
+			"page":     page,
+			"pageSize": pageSize,
+			"data":     comments,
+		})
+	})
+
 	r.Run(":8888") // listen and serve on 0.0.0.0:8080
 }

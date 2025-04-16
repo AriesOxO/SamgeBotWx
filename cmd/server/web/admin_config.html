@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>配置管理</title>
+  <link rel="stylesheet" href="css/pc_comment.css">
+</head>
+<body>
+  <div class="admin-header">
+    <h2>配置管理</h2>
+    <div>
+      <button id="add-config-btn">新增配置</button>
+      <button id="batch-del-btn">批量删除</button>
+      <select id="page-size" title="每页条数">
+        <option value="10">10条/页</option>
+        <option value="20" selected>20条/页</option>
+        <option value="50">50条/页</option>
+        <option value="100">100条/页</option>
+      </select>
+    </div>
+  </div>
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th><input type="checkbox" id="select-all"></th>
+        <th>Key</th>
+        <th>Value</th>
+        <th>备注</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="config-tbody"></tbody>
+  </table>
+  <div class="admin-pagination" id="pagination"></div>
+
+  <!-- 编辑/新增弹窗 -->
+  <div class="modal hidden" id="edit-modal">
+    <div class="modal-content">
+      <h3 id="modal-title">配置</h3>
+      <input id="edit-key" placeholder="Key">
+      <input id="edit-value" placeholder="Value">
+      <input id="edit-comment" placeholder="备注">
+      <div>
+        <button id="save-edit-btn">保存</button>
+        <button id="cancel-edit-btn">取消</button>
+      </div>
+    </div>
+  </div>
+  <script src="js/admin_config.js"></script>
+</body>
+</html> 

@@ -1,0 +1,233 @@
+/* 管理后台独立美化样式 */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 40px 10px 40px;
+    background: #fff;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    margin-bottom: 10px;
+}
+
+.admin-header h2 {
+    font-size: 26px;
+    font-weight: 600;
+    color: #222;
+    margin-right: 30px;
+}
+
+.admin-header input,
+.admin-header select,
+.admin-header button {
+    margin-right: 10px;
+    padding: 7px 12px;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    font-size: 15px;
+    background: #f8fafd;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+.admin-header input:focus,
+.admin-header select:focus {
+    border: 1.5px solid #19A1EE;
+    outline: none;
+    background: #fff;
+}
+
+.admin-header button {
+    background: linear-gradient(90deg, #19A1EE 0%, #3670F6 100%);
+    color: #fff;
+    border: none;
+    font-weight: 500;
+    box-shadow: 0 1px 4px rgba(25, 161, 238, 0.08);
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.admin-header button:hover {
+    background: linear-gradient(90deg, #3670F6 0%, #19A1EE 100%);
+    box-shadow: 0 2px 8px rgba(25, 161, 238, 0.12);
+}
+
+.admin-table {
+    width: 96%;
+    margin: 0 auto 20px auto;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 13px 10px;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: left;
+    font-size: 15px;
+}
+
+.admin-table th {
+    background: #f5f8fa;
+    color: #222;
+    font-weight: 600;
+}
+
+.admin-table tr:hover {
+    background: #f0f7ff;
+}
+
+.admin-table td.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+    cursor: pointer;
+}
+
+.admin-table button {
+    background: #fff;
+    color: #19A1EE;
+    border: 1px solid #19A1EE;
+    border-radius: 4px;
+    padding: 4px 12px;
+    margin-right: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.admin-table button:hover {
+    background: #19A1EE;
+    color: #fff;
+}
+
+.admin-pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0 2% 10px 0;
+    min-height: 48px;
+    position: relative;
+    gap: 4px;
+}
+
+.admin-pagination .page-btn {
+    background: #fff;
+    color: #222;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    margin: 0;
+    padding: 5px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    min-width: 32px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.admin-pagination .page-btn.active,
+.admin-pagination .page-btn:hover {
+    background: #e6f2fd;
+    color: #1677ff;
+    border: 1px solid #1677ff;
+}
+
+.admin-pagination .page-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.admin-pagination .page-ellipsis {
+    padding: 0 4px;
+    color: #888;
+    font-size: 14px;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.admin-pagination .page-size-select {
+    margin-left: 12px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid #d0d7de;
+    background: #fff;
+    font-size: 14px;
+    color: #222;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.admin-pagination .page-size-select:hover {
+    border-color: #1677ff;
+}
+
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 36px 48px 28px 48px;
+    border-radius: 12px;
+    min-width: 340px;
+    box-shadow: 0 4px 24px rgba(25, 161, 238, 0.13);
+}
+
+.modal-content h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    color: #19A1EE;
+}
+
+.modal-content input,
+.modal-content textarea {
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 8px 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 15px;
+    background: #f8fafd;
+    transition: border 0.2s;
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus {
+    border: 1.5px solid #19A1EE;
+    background: #fff;
+    outline: none;
+}
+
+.modal-content button {
+    background: linear-gradient(90deg, #19A1EE 0%, #3670F6 100%);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 7px 18px;
+    font-size: 15px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.modal-content button:hover {
+    background: linear-gradient(90deg, #3670F6 0%, #19A1EE 100%);
+}
+
+.hidden {
+    display: none !important;
+}

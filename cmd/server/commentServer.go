@@ -19,7 +19,12 @@ func StartApiServer() {
 	r := gin.Default()
 	// 添加CORS中间件
 	r.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"*"}, // 允许的域名}, // 允许的HTTP方法
+		AllowOrigins: []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
 	}))
 
 	//根据条件查询所有评论

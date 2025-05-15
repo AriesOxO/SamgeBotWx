@@ -1,0 +1,256 @@
+ body {
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+     background-color: #f8f9fa;
+     color: #333;
+ }
+
+ /* 侧边栏样式 */
+ .sidebar {
+     min-height: 100vh;
+     padding-top: 20px;
+     position: sticky;
+     top: 0;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+ }
+
+ .sidebar-header {
+     padding: 10px 15px;
+     margin-bottom: 20px;
+     border-bottom: 1px solid #454d55;
+ }
+
+ .sidebar .nav-link {
+     color: #ced4da;
+     padding: 10px 15px;
+     border-radius: 5px;
+     margin: 5px 10px;
+     transition: all 0.3s ease;
+ }
+
+ .sidebar .nav-link:hover {
+     background-color: #454d55;
+     color: #fff;
+ }
+
+ .sidebar .nav-link.active {
+     background-color: #007bff;
+     color: #fff;
+ }
+
+ /* 主内容区样式 */
+ .main-content {
+     padding: 30px;
+     transition: all 0.3s ease;
+ }
+
+ .card {
+     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+     margin-bottom: 20px;
+     border-radius: 8px;
+     border: none;
+ }
+
+ .card-header {
+     background-color: #f8f9fa;
+     border-bottom: 1px solid #e9ecef;
+     padding: 15px 20px;
+ }
+
+ .card-body {
+     padding: 20px;
+ }
+
+ /* 表格样式 */
+ .table thead th {
+     background-color: #f8f9fa;
+     border-bottom: 2px solid #dee2e6;
+     color: #495057;
+ }
+
+ .table-hover tbody tr:hover {
+     background-color: rgba(0, 123, 255, 0.05);
+ }
+
+ /* 按钮样式 */
+ .btn {
+     border-radius: 5px;
+     padding: 8px 15px;
+     font-weight: 500;
+     transition: all 0.3s ease;
+ }
+
+ .btn-primary {
+     background-color: #007bff;
+     border-color: #007bff;
+ }
+
+ .btn-primary:hover {
+     background-color: #0069d9;
+     border-color: #0062cc;
+ }
+
+ .btn-success {
+     background-color: #28a745;
+     border-color: #28a745;
+ }
+
+ .btn-success:hover {
+     background-color: #218838;
+     border-color: #1e7e34;
+ }
+
+ .btn-danger {
+     background-color: #dc3545;
+     border-color: #dc3545;
+ }
+
+ .btn-danger:hover {
+     background-color: #c82333;
+     border-color: #bd2130;
+ }
+
+ /* 表单样式 */
+ .form-control:focus {
+     border-color: #80bdff;
+     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+ }
+
+ /* 分页控件样式 */
+ .pagination {
+     margin-top: 20px;
+ }
+
+ .pagination .page-item.active .page-link {
+     background-color: #007bff;
+     border-color: #007bff;
+ }
+
+ .pagination .page-link {
+     color: #007bff;
+ }
+
+ .pagination .page-link:hover {
+     color: #0056b3;
+     background-color: #e9ecef;
+     border-color: #dee2e6;
+ }
+
+ /* 评论内容样式 */
+ .comment-content {
+     max-height: 100px;
+     overflow-y: auto;
+ }
+
+ /* 仪表盘卡片样式 */
+ .card.bg-primary,
+ .card.bg-success,
+ .card.bg-info {
+     transition: transform 0.3s ease;
+ }
+
+ .card.bg-primary:hover,
+ .card.bg-success:hover,
+ .card.bg-info:hover {
+     transform: translateY(-5px);
+ }
+
+ /* 表格中评论内容的最大高度 */
+ .comment-text {
+     max-height: 150px;
+     overflow-y: auto;
+ }
+
+ /* 模态框样式 */
+ .modal-content {
+     border-radius: 8px;
+     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+ }
+
+ .modal-header {
+     background-color: #f8f9fa;
+     border-bottom: 1px solid #e9ecef;
+ }
+
+ .modal-footer {
+     background-color: #f8f9fa;
+     border-top: 1px solid #e9ecef;
+ }
+
+ /* 响应式调整 */
+ @media (max-width: 992px) {
+     .sidebar {
+         position: static;
+         min-height: auto;
+     }
+
+     .main-content {
+         padding: 20px;
+     }
+ }
+
+ /* 搜索区域样式 */
+ .input-group input {
+     border-radius: 4px;
+     margin-right: 5px;
+ }
+
+ .input-group .btn {
+     margin-left: 5px;
+ }
+
+ /* 搜索输入框悬停效果 */
+ .input-group input:hover,
+ .input-group input:focus {
+     border-color: #80bdff;
+     box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, 0.25);
+ }
+
+ /* 响应式搜索区域 */
+ @media (max-width: 992px) {
+     .input-group {
+         flex-direction: column;
+         align-items: stretch;
+     }
+
+     .input-group input,
+     .input-group .btn {
+         margin: 5px 0;
+         width: 100%;
+     }
+ }
+
+ /* 批量操作区域样式 */
+ .batch-operations {
+     display: flex;
+     align-items: center;
+     padding: 10px 0;
+     border-top: 1px solid #e9ecef;
+     margin-top: 15px;
+ }
+
+ #selected-count {
+     color: #6c757d;
+     font-size: 14px;
+ }
+
+ .form-check-input:checked {
+     background-color: #0d6efd;
+     border-color: #0d6efd;
+ }
+
+ .form-check-input:focus {
+     border-color: #86b7fe;
+     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+ }
+
+ /* 添加表格行悬停效果 */
+ .table tbody tr:hover {
+     background-color: rgba(0, 123, 255, 0.05);
+ }
+
+ /* 评论内容最大高度 */
+ .comment-text {
+     max-height: 100px;
+     overflow-y: auto;
+     white-space: pre-wrap;
+ }

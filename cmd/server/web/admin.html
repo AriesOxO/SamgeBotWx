@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评论管理系统</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="css/admin.css">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div class="col-md-2 bg-dark sidebar">
+            <div class="sidebar-header">
+                <h3 class="text-light">评论管理系统</h3>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" data-page="dashboard">
+                        <i class="bi bi-speedometer2 me-2"></i>仪表盘
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-page="comments">
+                        <i class="bi bi-chat-left-text me-2"></i>评论管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-page="settings">
+                        <i class="bi bi-gear me-2"></i>配置管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        <i class="bi bi-house me-2"></i>返回前台
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="col-md-10 main-content">
+            <!-- 仪表盘 -->
+            <div id="dashboard" class="content-page">
+                <h2 class="mb-4">仪表盘</h2>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card text-white bg-primary mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">评论总数</h5>
+                                <p class="card-text" id="total-comments">加载中...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-white bg-success mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">作品数量</h5>
+                                <p class="card-text" id="total-novels">加载中...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-white bg-info mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">当前赛季</h5>
+                                <p class="card-text" id="current-season">加载中...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                最近评论
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">笔名</th>
+                                        <th scope="col">小说标题</th>
+                                        <th scope="col">内容预览</th>
+                                        <th scope="col">时间</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="recent-comments-list">
+                                    <!-- 这里将动态加载最近的评论 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 评论管理 -->
+            <div id="comments" class="content-page d-none">
+                <h2 class="mb-4">评论管理</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="input-group mb-2">
+                                    <input type="text" class="form-control" id="search-wxNickName" placeholder="笔名昵称">
+                                    <input type="text" class="form-control" id="search-novelTitle" placeholder="小说标题">
+                                    <input type="number" class="form-control" id="search-number" placeholder="比赛届数">
+                                    <button class="btn btn-primary" id="search-btn">
+                                        <i class="bi bi-search"></i> 搜索
+                                    </button>
+                                    <button class="btn btn-outline-secondary" id="reset-search-btn">
+                                        <i class="bi bi-arrow-counterclockwise"></i> 重置
+                                    </button>
+                                </div>
+                                <div class="input-group">
+                                    <input type="date" class="form-control" id="search-startDate" placeholder="开始日期">
+                                    <span class="input-group-text">至</span>
+                                    <input type="date" class="form-control" id="search-endDate" placeholder="结束日期">
+                                    <button class="btn btn-outline-primary" id="date-search-btn">
+                                        <i class="bi bi-calendar-check"></i> 按日期筛选
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCommentModal">
+                                    <i class="bi bi-plus-lg"></i> 添加评论
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col" width="40px">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="select-all-comments" title="全选/取消全选" aria-label="全选/取消全选">
+                                        </div>
+                                    </th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">笔名</th>
+                                    <th scope="col">届数</th>
+                                    <th scope="col">小说标题</th>
+                                    <th scope="col">评论内容</th>
+                                    <th scope="col">时间</th>
+                                    <th scope="col">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody id="comments-list">
+                                <!-- 这里将动态加载评论数据 -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 批量操作按钮 -->
+                        <div class="batch-operations mb-3">
+                            <button class="btn btn-outline-danger" id="batch-delete-btn" disabled>
+                                <i class="bi bi-trash"></i> 批量删除
+                            </button>
+                            <span class="ms-2" id="selected-count">已选择 0 项</span>
+                        </div>
+                        <!-- 分页控件 -->
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center" id="comments-pagination">
+                                <!-- 分页按钮将在这里动态生成 -->
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 配置管理 -->
+            <div id="settings" class="content-page d-none">
+                <h2 class="mb-4">配置管理</h2>
+                <div class="card">
+                    <div class="card-header">
+                        基本配置
+                    </div>
+                    <div class="card-body">
+                        <form id="settings-form">
+                            <div class="mb-3">
+                                <label for="competition-number" class="form-label">当前赛季</label>
+                                <input type="number" class="form-control" id="competition-number" min="1">
+                            </div>
+                            <div class="mb-3">
+                                <label for="novel-catalogue" class="form-label">小说目录</label>
+                                <textarea class="form-control" id="novel-catalogue" rows="10" placeholder="小说名称列表，用|分隔"></textarea>
+                                <div class="form-text">输入格式：《小说名1》|《小说名2》|《小说名3》</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">保存配置</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加评论的模态框 -->
+<div class="modal fade" id="addCommentModal" tabindex="-1" aria-labelledby="addCommentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCommentModalLabel">添加评论</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-comment-form">
+                    <div class="mb-3">
+                        <label for="add-wx-nickname" class="form-label">笔名</label>
+                        <input type="text" class="form-control" id="add-wx-nickname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="add-novel-title" class="form-label">小说标题</label>
+                        <input type="text" class="form-control" id="add-novel-title" placeholder="不包含书名号《》" required>
+                        <div id="novel-title-feedback" class="invalid-feedback">
+                            请输入有效的小说标题
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="add-number" class="form-label">届数</label>
+                        <input type="number" class="form-control" id="add-number" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="add-comment-text" class="form-label">评论内容</label>
+                        <textarea class="form-control" id="add-comment-text" rows="5" required minlength="50"></textarea>
+                        <div class="form-text"><span id="add-char-count">0</span>/50 字符</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="save-comment-btn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 编辑评论的模态框 -->
+<div class="modal fade" id="editCommentModal" tabindex="-1" aria-labelledby="editCommentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCommentModalLabel">编辑评论</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-comment-form">
+                    <input type="hidden" id="edit-comment-id">
+                    <div class="mb-3">
+                        <label for="edit-wx-nickname" class="form-label">笔名</label>
+                        <input type="text" class="form-control" id="edit-wx-nickname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-novel-title" class="form-label">小说标题</label>
+                        <input type="text" class="form-control" id="edit-novel-title" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-number" class="form-label">届数</label>
+                        <input type="number" class="form-control" id="edit-number" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-comment-text" class="form-label">评论内容</label>
+                        <textarea class="form-control" id="edit-comment-text" rows="5" required minlength="50"></textarea>
+                        <div class="form-text"><span id="edit-char-count">0</span>/50 字符</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="update-comment-btn">更新</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 确认删除的模态框 -->
+<div class="modal fade" id="deleteCommentModal" tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteCommentModalLabel">确认删除</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>您确定要删除这条评论吗？此操作不可撤销。</p>
+                <input type="hidden" id="delete-comment-id">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-btn">删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 确认批量删除的模态框 -->
+<div class="modal fade" id="batchDeleteModal" tabindex="-1" aria-labelledby="batchDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="batchDeleteModalLabel">确认批量删除</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>您确定要删除选中的 <span id="batch-delete-count">0</span> 条评论吗？此操作不可撤销。</p>
+                <input type="hidden" id="batch-delete-ids">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="confirm-batch-delete-btn">删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

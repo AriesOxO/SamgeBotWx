@@ -14,6 +14,7 @@
         <div class="nav-container-box">
           <div class="nav-li active" onclick="window.location.href='index.html'">评论展示</div>
           <div class="nav-li" onclick="window.location.href='static.html'">评论统计</div>
+          <div class="nav-li admin-link" onclick="window.location.href='admin.html'">管理系统</div>
         </div>
       </div>
       <div class="search-container">
@@ -56,7 +57,7 @@
           <span id="currentPage" hidden>1</span>
           <div id="page-btns"></div>
           <svg class="page-btn" onclick="nextPage()" title="下一页" t="1726196916145" class="icon" viewBox="0 0 1034 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1401" width="45" height="45"><path d="M43.692093 5.528387l295.144549 222.918844V27.285266A27.285266 27.285266 0 0 1 382.528736 5.528387L1024 490.421456a27.285266 27.285266 0 0 1 0 43.513758L382.528736 1018.471613a27.285266 27.285266 0 0 1-43.692094-21.756879V795.463602l-295.144549 222.918843a27.285266 27.285266 0 0 1-43.692093-21.667711V27.285266A27.285266 27.285266 0 0 1 43.692093 5.528387z" fill="#467CFD" p-id="1402"></path></svg>
-          <select id="pageSize" onchange="changePageSize()">
+          <select id="pageSize" aria-label="每页显示条数" onchange="changePageSize()">
               <option value="10">10</option>
               <option value="20">20</option>
               <option value="50">50</option>

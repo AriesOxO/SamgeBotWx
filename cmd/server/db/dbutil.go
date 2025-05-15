@@ -39,6 +39,22 @@ type CommentStatic struct {
 	Count      int
 }
 
+// Config 配置表结构体
+type Config struct {
+	ID      uint   `gorm:"primaryKey;autoIncrement" json:"id"`
+	Key     string `gorm:"unique;not null;column:key" json:"key"`
+	Value   string `gorm:"not null;column:value" json:"value"`
+	Comment string `gorm:"column:comment" json:"comment"`
+}
+
+// Novel 小说表结构体
+type Novel struct {
+	ID         uint   `gorm:"primaryKey;autoIncrement" json:"id"`
+	NickName   string `gorm:"not null;column:NickName" json:"NickName"`
+	Number     int    `gorm:"not null;column:Number" json:"Number"`
+	NovelTitle string `gorm:"not null;column:NovelTitle;default:''" json:"NovelTitle"`
+}
+
 var DB *gorm.DB
 
 func InitDB() error {
@@ -197,4 +213,65 @@ func FindUniqueComment(wxNickName string, number int, novelTitle string) (*Comme
 		return nil, result.Error
 	}
 	return comment, nil
+}
+
+// Config表批量增删改查
+func CreateConfigs(configs []Config) error {
+	return DB.Create(&configs).Error
+}
+func GetConfigs() ([]Config, error) {
+	var configs []Config
+	err := DB.Find(&configs).Error
+	return configs, err
+}
+func UpdateConfigs(configs []Config) error {
+	for _, cfg := range configs {
+		if err := DB.Model(&Config{}).Where("id = ?", cfg.ID).Updates(cfg).Error; err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func DeleteConfigs(ids []uint) error {
+	return DB.Delete(&Config{}, ids).Error
+}
+
+// Novel表批量增删改查
+func CreateNovels(novels []Novel) error {
+	return DB.Create(&novels).Error
+}
+func GetNovels() ([]Novel, error) {
+	var novels []Novel
+	err := DB.Find(&novels).Error
+	return novels, err
+}
+func UpdateNovels(novels []Novel) error {
+	for _, n := range novels {
+		if err := DB.Model(&Novel{}).Where("id = ?", n.ID).Updates(n).Error; err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func DeleteNovels(ids []uint) error {
+	return DB.Delete(&Novel{}, ids).Error
+}
+
+// Comment表分页与总数
+func GetCommentsPaged(offset, limit int, filters map[string]interface{}) ([]Comment, int64, error) {
+	var comments []Comment
+	var total int64
+	query := DB.Model(&Comment{})
+	for k, v := range filters {
+		query = query.Where(k, v)
+	}
+	err := query.Count(&total).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	err = query.Offset(offset).Limit(limit).Order("create_time desc").Find(&comments).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	return comments, total, nil
 }

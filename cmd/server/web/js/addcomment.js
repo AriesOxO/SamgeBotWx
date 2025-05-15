@@ -1,13 +1,19 @@
 let config;
-
+let configLoaded = false; // 添加加载状态标志
 async function loadConfig() {
-    const response = await fetch('config.json');
-    if (!response.ok) {
-        throw new Error('无法加载配置文件');
+    try {
+        const response = await fetch('config.json');
+        if (!response.ok) throw new Error('无法加载配置文件');
+        config = await response.json();
+        configLoaded = true;
+        console.log('配置加载完成:', config); // 调试用
+    } catch (error) {
+        console.error('配置加载失败:', error);
+        // 可以设置默认配置或显示错误信息
+        config = { apiBaseUrl: 'http://default-api-url.com/' };
+        configLoaded = true;
     }
-    config = await response.json();
 }
-
 loadConfig();
 
 async function checkNovelTitle(novelTitle, number) {
@@ -52,17 +58,33 @@ function validateInput() {
     return true;
 }
 
-// 页面加载时获取配置
-// document.addEventListener('DOMContentLoaded', async function () {
-//     try {
-//         const response = await fetch('config.json');
-//         const config = await response.json();
-//         document.getElementById('number').value = config.number;
-//     } catch (error) {
-//         console.error('加载配置文件失败:', error);
-//     }
-//
-// });
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadConfig(); // 确保配置已加载
+
+    try {
+        if (!config?.apiBaseUrl) {
+            throw new Error('API基础路径未配置');
+        }
+
+        const response = await fetch(`${config.apiBaseUrl}getSeason`, {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (!response.ok) throw new Error(`HTTP错误! 状态码: ${response.status}`);
+
+        const result = await response.json();
+        console.log('赛季数据:', result);
+
+        // 设置默认值（修复硬编码问题）
+        document.getElementById('number').value = result?.data || 25;
+
+    } catch (error) {
+        console.error('获取赛季失败:', error);
+        document.getElementById('number').value = 25; // 默认值
+    }
+});
+
 
 // 更新字数统计
 function updateCharCount() {

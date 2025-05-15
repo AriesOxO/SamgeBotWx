@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>评论管理</title>
+  <link rel="stylesheet" href="css/admin_manage.css">
+</head>
+<body>
+  <div class="admin-header">
+    <h2>评论管理</h2>
+    <div>
+      <input id="filter-nick" placeholder="昵称">
+      <input id="filter-title" placeholder="小说名">
+      <input id="filter-number" placeholder="章节号">
+      <button id="filter-btn">筛选</button>
+      <button id="batch-del-btn">批量删除</button>
+    </div>
+  </div>
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th><input type="checkbox" id="select-all"></th>
+        <th>昵称</th>
+        <th>小说名</th>
+        <th>比赛届数</th>
+        <th>评论内容</th>
+        <th>创建时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="comment-tbody"></tbody>
+  </table>
+  <div class="admin-pagination" id="pagination"></div>
+
+  <!-- 编辑弹窗 -->
+  <div class="modal hidden" id="edit-modal">
+    <div class="modal-content">
+      <h3>编辑评论</h3>
+      <input id="edit-nick" placeholder="昵称">
+      <input id="edit-title" placeholder="小说名">
+      <input id="edit-number" placeholder="比赛届数">
+      <textarea id="edit-content" placeholder="评论内容"></textarea>
+      <div>
+        <button id="save-edit-btn">保存</button>
+        <button id="cancel-edit-btn">取消</button>
+      </div>
+    </div>
+  </div>
+  <script src="js/admin_comment.js"></script>
+</body>
+</html> 

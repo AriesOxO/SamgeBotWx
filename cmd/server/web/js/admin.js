@@ -107,16 +107,27 @@ async function loadDashboard() {
                 recentCommentsData.data.forEach(comment => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-            <td>${comment.ID}</td>
-            <td>${comment.WxNickName}</td>
-            <td>${comment.NovelTitle}</td>
-            <td>${truncateText(comment.CommentText, 50)}</td>
-            <td>${comment.CreateTime}</td>
+            <td>${comment.WxNickName || ''}</td>
+            <td>${comment.NovelTitle || ''}</td>
+            <td><div class="comment-text-single-line">${comment.CommentText || ''}</div></td>
+            <td>${comment.CreateTime || ''}</td>
           `;
                     recentCommentsList.appendChild(row);
+
+                    // 添加评论内容点击事件
+                    const commentTextDiv = row.querySelector('.comment-text-single-line');
+                    commentTextDiv.addEventListener('click', function () {
+                        if (this.classList.contains('comment-text-single-line')) {
+                            this.classList.remove('comment-text-single-line');
+                            this.classList.add('comment-text-expanded');
+                        } else {
+                            this.classList.remove('comment-text-expanded');
+                            this.classList.add('comment-text-single-line');
+                        }
+                    });
                 });
             } else {
-                recentCommentsList.innerHTML = '<tr><td colspan="5" class="text-center">暂无评论数据</td></tr>';
+                recentCommentsList.innerHTML = '<tr><td colspan="4" class="text-center">暂无评论数据</td></tr>';
             }
         }
 
@@ -333,12 +344,13 @@ async function loadComments(page) {
               <input class="form-check-input comment-checkbox" type="checkbox" data-id="${comment.ID}" title="选择此评论" aria-label="选择评论">
             </div>
           </td>
-          <td>${comment.ID}</td>
-          <td>${comment.WxNickName}</td>
-          <td>${comment.Number}</td>
-          <td>${comment.NovelTitle}</td>
-          <td class="comment-text">${comment.CommentText}</td>
-          <td>${comment.CreateTime}</td>
+          <td>${comment.WxNickName || ''}</td>
+          <td>${comment.Number || ''}</td>
+          <td>${comment.NovelTitle || ''}</td>
+          <td>
+            <div class="comment-text-single-line" data-comment-id="${comment.ID}">${comment.CommentText || ''}</div>
+          </td>
+          <td>${comment.CreateTime || ''}</td>
           <td>
             <button class="btn btn-sm btn-outline-primary me-1" onclick="openEditModal(${comment.ID})">
               <i class="bi bi-pencil"></i>
@@ -348,6 +360,7 @@ async function loadComments(page) {
             </button>
           </td>
         `;
+
                 commentsList.appendChild(row);
 
                 // 为新添加的复选框绑定事件
@@ -365,9 +378,21 @@ async function loadComments(page) {
 
                     updateBatchOperations();
                 });
+
+                // 添加评论内容点击事件
+                const commentTextDiv = row.querySelector('.comment-text-single-line');
+                commentTextDiv.addEventListener('click', function () {
+                    if (this.classList.contains('comment-text-single-line')) {
+                        this.classList.remove('comment-text-single-line');
+                        this.classList.add('comment-text-expanded');
+                    } else {
+                        this.classList.remove('comment-text-expanded');
+                        this.classList.add('comment-text-single-line');
+                    }
+                });
             });
         } else {
-            commentsList.innerHTML = '<tr><td colspan="8" class="text-center">暂无评论数据</td></tr>';
+            commentsList.innerHTML = '<tr><td colspan="7" class="text-center">暂无评论数据</td></tr>';
         }
 
         // 重置选中状态

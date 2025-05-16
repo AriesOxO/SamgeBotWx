@@ -23,6 +23,14 @@ type Comment struct {
 	UpdateTime  string `gorm:"not null;column:update_time"`
 }
 
+// Settings 对应数据库中的 settings 表
+type Settings struct {
+	ID    uint   `gorm:"primaryKey;autoIncrement"`
+	Key   string `gorm:"not null;column:key;uniqueIndex"`
+	Value string `gorm:"not null;column:value"`
+	Desc  string `gorm:"column:desc"`
+}
+
 type CommentStatic struct {
 	WxNickName string
 	NovelTitle string
@@ -51,6 +59,59 @@ func InitDB() error {
 
 	// 添加成功日志
 	log.Println("Database connected and migrated successfully.")
+	return nil
+}
+
+// 以下是Settings表的CRUD操作
+
+// GetSettingByKey 根据Key获取配置
+func GetSettingByKey(key string) (*Settings, error) {
+	setting := &Settings{}
+	result := DB.Where("`key` = ?", key).First(setting)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return setting, nil
+}
+
+// GetAllSettings 获取所有配置
+func GetAllSettings() ([]Settings, error) {
+	var settings []Settings
+	result := DB.Find(&settings)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return settings, nil
+}
+
+// CreateSetting 创建配置
+func CreateSetting(setting *Settings) error {
+	result := DB.Create(setting)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+// UpdateSetting 更新配置
+func UpdateSetting(key string, value string, desc string) error {
+	// 使用map更新，因为struct会忽略零值
+	result := DB.Model(&Settings{}).Where("`key` = ?", key).Updates(map[string]interface{}{
+		"value": value,
+		"desc":  desc,
+	})
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+// DeleteSetting 删除配置
+func DeleteSetting(key string) error {
+	result := DB.Where("`key` = ?", key).Delete(&Settings{})
+	if result.Error != nil {
+		return result.Error
+	}
 	return nil
 }
 

@@ -3,7 +3,6 @@ let currentPage = 1;
 let pageSize = 10;
 let totalPages = 1;
 let apiBaseUrl = '';
-let currentSeason = 0;
 let selectedComments = new Set(); // 存储已选择的评论ID
 
 // DOM加载完成后执行
@@ -33,13 +32,6 @@ async function loadConfig() {
         }
         const config = await response.json();
         apiBaseUrl = config.apiBaseUrl;
-
-        // 获取当前赛季
-        const seasonResponse = await fetch(`${apiBaseUrl}getSeason`);
-        if (seasonResponse.ok) {
-            const seasonData = await seasonResponse.json();
-            currentSeason = seasonData.data;
-        }
     } catch (error) {
         console.error('加载配置失败:', error);
         showAlert('加载配置失败，请刷新页面重试。', 'danger');
@@ -94,7 +86,14 @@ async function loadDashboard() {
         }
 
         // 加载当前赛季
-        document.getElementById('current-season').textContent = currentSeason;
+        const seasonResponse = await fetch(`${apiBaseUrl}settings/competition_number`);
+        if (seasonResponse.ok) {
+            const seasonData = await seasonResponse.json();
+            const currentSeason = seasonData.data.Value;
+            document.getElementById('current-season').textContent = currentSeason;
+        } else {
+            document.getElementById('current-season').textContent = "未设置";
+        }
 
         // 加载最近评论
         const recentCommentsResponse = await fetch(`${apiBaseUrl}comments?page=1&pageSize=5`);
@@ -246,8 +245,17 @@ function setupCommentManagement() {
 
     // 初始化添加评论模态框时，自动设置当前赛季
     const addCommentModal = document.getElementById('addCommentModal');
-    addCommentModal.addEventListener('show.bs.modal', function () {
-        document.getElementById('add-number').value = currentSeason;
+    addCommentModal.addEventListener('show.bs.modal', async function () {
+        // 获取当前赛季设置
+        try {
+            const response = await fetch(`${apiBaseUrl}settings/competition_number`);
+            if (response.ok) {
+                const result = await response.json();
+                document.getElementById('add-number').value = result.data.Value;
+            }
+        } catch (error) {
+            console.error('获取当前赛季失败:', error);
+        }
 
         // 重置表单
         document.getElementById('add-wx-nickname').value = '';
@@ -624,80 +632,231 @@ async function deleteComment(commentId) {
 
 // 设置配置管理
 function setupSettingsManagement() {
-    document.getElementById('settings-form').addEventListener('submit', function (e) {
-        e.preventDefault();
+    // 加载配置列表
+    loadSettings();
 
-        // 获取配置值
-        const competitionNumber = parseInt(document.getElementById('competition-number').value);
-        const novelCatalogue = document.getElementById('novel-catalogue').value;
+    // 添加配置
+    document.getElementById('save-setting-btn').addEventListener('click', function () {
+        const key = document.getElementById('add-setting-key').value.trim();
+        const value = document.getElementById('add-setting-value').value.trim();
+        const desc = document.getElementById('add-setting-desc').value.trim();
 
-        // 保存配置
-        saveSettings(competitionNumber, novelCatalogue);
+        if (!key || !value) {
+            showAlert('配置键和配置值不能为空', 'danger');
+            return;
+        }
+
+        addSetting(key, value, desc);
+    });
+
+    // 更新配置
+    document.getElementById('update-setting-btn').addEventListener('click', function () {
+        const key = document.getElementById('edit-setting-key').value;
+        const value = document.getElementById('edit-setting-value').value.trim();
+        const desc = document.getElementById('edit-setting-desc').value.trim();
+
+        if (!value) {
+            showAlert('配置值不能为空', 'danger');
+            return;
+        }
+
+        updateSetting(key, value, desc);
+    });
+
+    // 删除配置
+    document.getElementById('confirm-delete-setting-btn').addEventListener('click', function () {
+        const key = document.getElementById('delete-setting-key-input').value;
+        deleteSetting(key);
     });
 }
 
-// 加载配置
+// 加载配置列表
 async function loadSettings() {
     try {
-        // 设置当前赛季
-        document.getElementById('competition-number').value = currentSeason;
-
-        // 获取小说目录
-        const response = await fetch(`${apiBaseUrl}config`);
+        const response = await fetch(`${apiBaseUrl}settings`);
         if (!response.ok) {
-            throw new Error('获取配置失败');
+            throw new Error('获取配置列表失败');
         }
 
-        const data = await response.json();
+        const result = await response.json();
+        const settingsList = document.getElementById('settings-list');
+        settingsList.innerHTML = '';
 
-        if (data.data) {
-            const config = data.data.find(c => c.key === 'novel_catalogue');
-            if (config && config.value) {
-                document.getElementById('novel-catalogue').value = config.value;
-            }
+        if (result.data && result.data.length > 0) {
+            result.data.forEach(setting => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${setting.Key}</td>
+                    <td>
+                        <div class="comment-text-single-line">${setting.Value}</div>
+                    </td>
+                    <td>${setting.Desc || ''}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="openEditSettingModal('${setting.Key}')">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="openDeleteSettingModal('${setting.Key}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                `;
+
+                settingsList.appendChild(row);
+
+                // 添加配置值点击展开/收起事件
+                const valueDiv = row.querySelector('.comment-text-single-line');
+                valueDiv.addEventListener('click', function () {
+                    if (this.classList.contains('comment-text-single-line')) {
+                        this.classList.remove('comment-text-single-line');
+                        this.classList.add('comment-text-expanded');
+                    } else {
+                        this.classList.remove('comment-text-expanded');
+                        this.classList.add('comment-text-single-line');
+                    }
+                });
+            });
+        } else {
+            settingsList.innerHTML = '<tr><td colspan="4" class="text-center">暂无配置数据</td></tr>';
         }
     } catch (error) {
-        console.error('加载配置失败:', error);
-        showAlert('加载配置失败，请稍后重试。', 'danger');
+        console.error('加载配置列表失败:', error);
+        showAlert('加载配置列表失败，请稍后重试', 'danger');
     }
 }
 
-// 保存配置
-async function saveSettings(competitionNumber, novelCatalogue) {
+// 打开编辑配置模态框
+async function openEditSettingModal(key) {
     try {
-        // 保存赛季配置
-        const seasonResponse = await fetch(`${apiBaseUrl}setSeason`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                number: competitionNumber
-            })
-        });
+        const response = await fetch(`${apiBaseUrl}settings/${key}`);
+        if (!response.ok) {
+            throw new Error('获取配置详情失败');
+        }
 
-        // 保存小说目录
-        const catalogueResponse = await fetch(`${apiBaseUrl}setCatalogue`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                catalogue: novelCatalogue
-            })
-        });
+        const result = await response.json();
+        const setting = result.data;
 
-        // 更新全局变量
-        currentSeason = competitionNumber;
+        document.getElementById('edit-setting-key').value = setting.Key;
+        document.getElementById('edit-setting-key-display').value = setting.Key;
+        document.getElementById('edit-setting-value').value = setting.Value;
+        document.getElementById('edit-setting-desc').value = setting.Desc || '';
 
-        // 刷新仪表盘
-        loadDashboard();
-
-        // 显示成功消息
-        showAlert('配置保存成功！', 'success');
+        const modal = new bootstrap.Modal(document.getElementById('editSettingModal'));
+        modal.show();
     } catch (error) {
-        console.error('保存配置失败:', error);
-        showAlert('保存配置失败，请稍后重试。', 'danger');
+        console.error('获取配置详情失败:', error);
+        showAlert('获取配置详情失败，请稍后重试', 'danger');
+    }
+}
+
+// 打开删除配置模态框
+function openDeleteSettingModal(key) {
+    document.getElementById('delete-setting-key').textContent = key;
+    document.getElementById('delete-setting-key-input').value = key;
+
+    const modal = new bootstrap.Modal(document.getElementById('deleteSettingModal'));
+    modal.show();
+}
+
+// 添加配置
+async function addSetting(key, value, desc) {
+    try {
+        const response = await fetch(`${apiBaseUrl}settings`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                Key: key,
+                Value: value,
+                Desc: desc
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || '添加配置失败');
+        }
+
+        // 关闭模态框
+        const modal = bootstrap.Modal.getInstance(document.getElementById('addSettingModal'));
+        modal.hide();
+
+        // 重置表单
+        document.getElementById('add-setting-key').value = '';
+        document.getElementById('add-setting-value').value = '';
+        document.getElementById('add-setting-desc').value = '';
+
+        // 刷新配置列表
+        loadSettings();
+
+        showAlert('配置添加成功', 'success');
+    } catch (error) {
+        console.error('添加配置失败:', error);
+        showAlert(`添加配置失败: ${error.message}`, 'danger');
+    }
+}
+
+// 更新配置
+async function updateSetting(key, value, desc) {
+    try {
+        const response = await fetch(`${apiBaseUrl}settings/${key}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                value: value,
+                desc: desc
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || '更新配置失败');
+        }
+
+        // 关闭模态框
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editSettingModal'));
+        modal.hide();
+
+        // 刷新配置列表
+        loadSettings();
+
+        // 如果更新的是当前赛季或小说目录，刷新仪表盘
+        if (key === 'competition_number' || key === 'novel_catalogue') {
+            loadDashboard();
+        }
+
+        showAlert('配置更新成功', 'success');
+    } catch (error) {
+        console.error('更新配置失败:', error);
+        showAlert(`更新配置失败: ${error.message}`, 'danger');
+    }
+}
+
+// 删除配置
+async function deleteSetting(key) {
+    try {
+        const response = await fetch(`${apiBaseUrl}settings/${key}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || '删除配置失败');
+        }
+
+        // 关闭模态框
+        const modal = bootstrap.Modal.getInstance(document.getElementById('deleteSettingModal'));
+        modal.hide();
+
+        // 刷新配置列表
+        loadSettings();
+
+        showAlert('配置删除成功', 'success');
+    } catch (error) {
+        console.error('删除配置失败:', error);
+        showAlert(`删除配置失败: ${error.message}`, 'danger');
     }
 }
 

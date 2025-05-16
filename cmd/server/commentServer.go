@@ -2,12 +2,12 @@ package server
 
 import (
 	"SamgeWxApi/cmd/server/db"
-	config "SamgeWxApi/cmd/utils/u_config"
 	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -19,7 +19,12 @@ func StartApiServer() {
 	r := gin.Default()
 	// 添加CORS中间件
 	r.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"*"}, // 允许的域名}, // 允许的HTTP方法
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
 	}))
 
 	//根据条件查询所有评论
@@ -172,6 +177,156 @@ func StartApiServer() {
 		})
 	})
 
+	// 获取配置接口 - 获取所有配置
+	r.GET("/api/settings", func(c *gin.Context) {
+		settings, err := db.GetAllSettings()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "获取配置失败: " + err.Error(),
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "获取配置成功",
+			"data":    settings,
+		})
+	})
+
+	// 获取单个配置接口
+	r.GET("/api/settings/:key", func(c *gin.Context) {
+		key := c.Param("key")
+		setting, err := db.GetSettingByKey(key)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": "配置不存在",
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "获取配置成功",
+			"data":    setting,
+		})
+	})
+
+	// 添加配置接口
+	r.POST("/api/settings", func(c *gin.Context) {
+		var setting db.Settings
+		if err := c.ShouldBindJSON(&setting); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "无效的请求数据: " + err.Error(),
+			})
+			return
+		}
+
+		// 检查key是否已存在
+		_, err := db.GetSettingByKey(setting.Key)
+		if err == nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "配置键已存在",
+			})
+			return
+		}
+
+		if err := db.CreateSetting(&setting); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "创建配置失败: " + err.Error(),
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "配置创建成功",
+			"data":    setting,
+		})
+	})
+
+	// 更新配置接口
+	r.PUT("/api/settings/:key", func(c *gin.Context) {
+		key := c.Param("key")
+
+		// 检查配置是否存在
+		_, err := db.GetSettingByKey(key)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": "配置不存在",
+			})
+			return
+		}
+
+		var updateData struct {
+			Value string `json:"value"`
+			Desc  string `json:"desc"`
+		}
+
+		if err := c.ShouldBindJSON(&updateData); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "无效的请求数据: " + err.Error(),
+			})
+			return
+		}
+
+		if err := db.UpdateSetting(key, updateData.Value, updateData.Desc); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "更新配置失败: " + err.Error(),
+			})
+			return
+		}
+
+		// 获取更新后的配置
+		updatedSetting, _ := db.GetSettingByKey(key)
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "配置更新成功",
+			"data":    updatedSetting,
+		})
+	})
+
+	// 删除配置接口
+	r.DELETE("/api/settings/:key", func(c *gin.Context) {
+		key := c.Param("key")
+
+		// 检查配置是否存在
+		_, err := db.GetSettingByKey(key)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": "配置不存在",
+			})
+			return
+		}
+
+		if err := db.DeleteSetting(key); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "删除配置失败: " + err.Error(),
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "配置删除成功",
+		})
+	})
+
+	// 为确保兼容性，保留以下接口
+	r.GET("/api/getSeason", func(c *gin.Context) {
+		setting, err := db.GetSettingByKey("competition_number")
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "获取赛季失败",
+			})
+			return
+		}
+
+		// 转换为数字
+		seasonNumber := setting.Value
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "获取当前赛季成功",
+			"data":    seasonNumber,
+		})
+	})
+
 	// 检查小说名称是否存在
 	r.GET("/api/checknovel", func(c *gin.Context) {
 		number := c.Query("number")
@@ -182,7 +337,17 @@ func StartApiServer() {
 			return
 		}
 
-		isValid := config.ValidTitle(novelTitle)
+		// 获取小说目录配置
+		catalogueSetting, err := db.GetSettingByKey("novel_catalogue")
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "获取小说目录失败",
+			})
+			return
+		}
+
+		// 验证小说标题
+		isValid := strings.Contains(catalogueSetting.Value, novelTitle)
 		if !isValid {
 			c.JSON(http.StatusOK, gin.H{
 				"exists":  false,
@@ -197,13 +362,13 @@ func StartApiServer() {
 		})
 	})
 
-	// 增加评论接口
-	r.GET("/api/getSeason", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "获取当前赛季成功",
-			"data":    config.LoadConfig().CompetitionNumber,
-		})
-	})
+	//// 增加评论接口
+	//r.GET("/api/getSeason", func(c *gin.Context) {
+	//	c.JSON(http.StatusOK, gin.H{
+	//		"message": "获取当前赛季成功",
+	//		"data":    config.LoadConfig().CompetitionNumber,
+	//	})
+	//})
 
 	// 增加评论接口
 	r.POST("/api/addcomments", func(c *gin.Context) {
@@ -295,78 +460,6 @@ func StartApiServer() {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "评论更新成功",
 			"data":    existingComment,
-		})
-	})
-
-	// 获取配置接口
-	r.GET("/api/config", func(c *gin.Context) {
-		// 从配置文件中读取配置
-		novelCatalogue := config.LoadConfig().NovelCatalogue
-		competitionNumber := config.LoadConfig().CompetitionNumber
-
-		c.JSON(http.StatusOK, gin.H{
-			"message": "获取配置成功",
-			"data": []map[string]interface{}{
-				{
-					"key":   "novel_catalogue",
-					"value": novelCatalogue,
-				},
-				{
-					"key":   "competition_number",
-					"value": competitionNumber,
-				},
-			},
-		})
-	})
-
-	// 设置赛季接口
-	r.POST("/api/setSeason", func(c *gin.Context) {
-		var requestData struct {
-			Number int `json:"number"`
-		}
-
-		if err := c.ShouldBindJSON(&requestData); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "无效的请求数据"})
-			return
-		}
-
-		if requestData.Number <= 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "赛季数必须大于0"})
-			return
-		}
-
-		// 更新配置
-		config.LoadConfig().CompetitionNumber = requestData.Number
-
-		// 更新配置文件（实际项目中可能需要持久化存储）
-		// 这里简化处理，实际上应该将变更写入配置文件或数据库
-
-		c.JSON(http.StatusOK, gin.H{
-			"message": "赛季设置成功",
-			"data":    requestData.Number,
-		})
-	})
-
-	// 设置小说目录接口
-	r.POST("/api/setCatalogue", func(c *gin.Context) {
-		var requestData struct {
-			Catalogue string `json:"catalogue"`
-		}
-
-		if err := c.ShouldBindJSON(&requestData); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "无效的请求数据"})
-			return
-		}
-
-		// 更新配置
-		config.LoadConfig().NovelCatalogue = requestData.Catalogue
-
-		// 更新配置文件（实际项目中可能需要持久化存储）
-		// 这里简化处理，实际上应该将变更写入配置文件或数据库
-
-		c.JSON(http.StatusOK, gin.H{
-			"message": "小说目录设置成功",
-			"data":    requestData.Catalogue,
 		})
 	})
 

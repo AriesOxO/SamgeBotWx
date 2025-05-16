@@ -175,22 +175,28 @@
             <div id="settings" class="content-page d-none">
                 <h2 class="mb-4">配置管理</h2>
                 <div class="card">
-                    <div class="card-header">
-                        基本配置
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>系统配置</span>
+                        <button class="btn btn-sm btn-success" id="add-setting-btn" data-bs-toggle="modal" data-bs-target="#addSettingModal">
+                            <i class="bi bi-plus-lg"></i> 添加配置
+                        </button>
                     </div>
                     <div class="card-body">
-                        <form id="settings-form">
-                            <div class="mb-3">
-                                <label for="competition-number" class="form-label">当前赛季</label>
-                                <input type="number" class="form-control" id="competition-number" min="1">
-                            </div>
-                            <div class="mb-3">
-                                <label for="novel-catalogue" class="form-label">小说目录</label>
-                                <textarea class="form-control" id="novel-catalogue" rows="10" placeholder="小说名称列表，用|分隔"></textarea>
-                                <div class="form-text">输入格式：《小说名1》|《小说名2》|《小说名3》</div>
-                            </div>
-                            <button type="submit" class="btn btn-primary">保存配置</button>
-                        </form>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col" width="20%">配置键</th>
+                                    <th scope="col" width="40%">配置值</th>
+                                    <th scope="col" width="25%">描述</th>
+                                    <th scope="col" width="15%">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody id="settings-list">
+                                <!-- 这里将动态加载配置数据 -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -311,6 +317,91 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                 <button type="button" class="btn btn-danger" id="confirm-batch-delete-btn">删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加配置的模态框 -->
+<div class="modal fade" id="addSettingModal" tabindex="-1" aria-labelledby="addSettingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSettingModalLabel">添加配置</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-setting-form">
+                    <div class="mb-3">
+                        <label for="add-setting-key" class="form-label">配置键</label>
+                        <input type="text" class="form-control" id="add-setting-key" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="add-setting-value" class="form-label">配置值</label>
+                        <textarea class="form-control" id="add-setting-value" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="add-setting-desc" class="form-label">描述</label>
+                        <input type="text" class="form-control" id="add-setting-desc">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="save-setting-btn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 编辑配置的模态框 -->
+<div class="modal fade" id="editSettingModal" tabindex="-1" aria-labelledby="editSettingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editSettingModalLabel">编辑配置</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-setting-form">
+                    <input type="hidden" id="edit-setting-key">
+                    <div class="mb-3">
+                        <label for="edit-setting-key-display" class="form-label">配置键</label>
+                        <input type="text" class="form-control" id="edit-setting-key-display" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-setting-value" class="form-label">配置值</label>
+                        <textarea class="form-control" id="edit-setting-value" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-setting-desc" class="form-label">描述</label>
+                        <input type="text" class="form-control" id="edit-setting-desc">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="update-setting-btn">更新</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 确认删除配置的模态框 -->
+<div class="modal fade" id="deleteSettingModal" tabindex="-1" aria-labelledby="deleteSettingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteSettingModalLabel">确认删除</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>您确定要删除配置 "<span id="delete-setting-key"></span>" 吗？此操作不可撤销。</p>
+                <input type="hidden" id="delete-setting-key-input">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-setting-btn">删除</button>
             </div>
         </div>
     </div>

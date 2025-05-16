@@ -2,6 +2,7 @@ package db
 
 import (
 	config "SamgeWxApi/cmd/utils/u_config"
+	"encoding/json"
 	"fmt"
 	"log"
 	"time"
@@ -29,6 +30,16 @@ type Settings struct {
 	Key   string `gorm:"not null;column:key;uniqueIndex"`
 	Value string `gorm:"not null;column:value"`
 	Desc  string `gorm:"column:desc"`
+}
+
+// Novel 对应数据库中的 novels 表
+type Novel struct {
+	ID         uint   `gorm:"primaryKey;autoIncrement;column:id" json:"ID"`
+	NovelTitle string `gorm:"not null;column:novel_title" json:"NovelTitle"`
+	Number     int    `gorm:"not null;column:number" json:"Number"`
+	Author     string `gorm:"not null;column:author" json:"Author"`
+	CreateTime string `gorm:"not null;column:create_time" json:"CreateTime"`
+	UpdateTime string `gorm:"not null;column:update_time" json:"UpdateTime"`
 }
 
 type CommentStatic struct {
@@ -205,4 +216,69 @@ func FindUniqueComment(wxNickName string, number int, novelTitle string) (*Comme
 		return nil, result.Error
 	}
 	return comment, nil
+}
+
+// 以下是Novel表的CRUD操作
+
+// CreateNovel 创建小说
+func CreateNovel(novel *Novel) error {
+	// 添加调试日志
+	jsonData, _ := json.Marshal(novel)
+	log.Printf("正在创建小说: %s", string(jsonData))
+
+	result := DB.Create(novel)
+	if result.Error != nil {
+		log.Printf("创建小说失败: %v", result.Error)
+		return result.Error
+	}
+	log.Printf("小说创建成功, ID: %d", novel.ID)
+	return nil
+}
+
+// GetNovelByID 根据ID获取小说
+func GetNovelByID(id uint) (*Novel, error) {
+	novel := &Novel{}
+	result := DB.First(novel, id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return novel, nil
+}
+
+// UpdateNovel 更新小说
+func UpdateNovel(novel *Novel) error {
+	result := DB.Save(novel)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+// DeleteNovelByID 根据ID删除小说
+func DeleteNovelByID(id uint) error {
+	result := DB.Delete(&Novel{}, id)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+// GetNovelsByNumber 根据届数获取小说
+func GetNovelsByNumber(number int) ([]*Novel, error) {
+	var novels []*Novel
+	result := DB.Where("number = ?", number).Find(&novels)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return novels, nil
+}
+
+// GetNovelByCondition 根据条件查询小说
+func GetNovelByCondition(novelTitle string, number int, author string) (*Novel, error) {
+	novel := &Novel{}
+	result := DB.Where("novel_title = ? AND number = ? AND author = ?", novelTitle, number, author).First(novel)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return novel, nil
 }

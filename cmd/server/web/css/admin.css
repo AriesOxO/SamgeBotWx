@@ -6,54 +6,51 @@
 
  /* 侧边栏样式 */
  .sidebar {
-     min-height: 100vh;
-     padding-top: 20px;
+     height: 100vh;
      position: sticky;
      top: 0;
-     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+     padding-top: 20px;
  }
 
  .sidebar-header {
      padding: 10px 15px;
      margin-bottom: 20px;
-     border-bottom: 1px solid #454d55;
  }
 
  .sidebar .nav-link {
-     color: #ced4da;
+     color: rgba(255, 255, 255, 0.75);
      padding: 10px 15px;
-     border-radius: 5px;
-     margin: 5px 10px;
-     transition: all 0.3s ease;
+     margin-bottom: 5px;
+     border-radius: 4px;
+     transition: all 0.3s;
  }
 
  .sidebar .nav-link:hover {
-     background-color: #454d55;
-     color: #fff;
+     color: white;
+     background-color: rgba(255, 255, 255, 0.1);
  }
 
  .sidebar .nav-link.active {
+     color: white;
      background-color: #007bff;
-     color: #fff;
  }
 
  /* 主内容区样式 */
  .main-content {
-     padding: 30px;
-     transition: all 0.3s ease;
+     padding: 20px;
+     min-height: 100vh;
+     background-color: #f8f9fa;
  }
 
  .card {
-     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
      margin-bottom: 20px;
-     border-radius: 8px;
-     border: none;
  }
 
  .card-header {
-     background-color: #f8f9fa;
-     border-bottom: 1px solid #e9ecef;
-     padding: 15px 20px;
+     background-color: #fff;
+     border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+     padding: 15px;
  }
 
  .card-body {
@@ -66,15 +63,9 @@
      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
  }
 
- .table thead th {
+ .table th {
+     font-weight: 600;
      background-color: #f8f9fa;
-     border-bottom: 2px solid #dee2e6;
-     color: #495057;
-     white-space: nowrap;
-     overflow: hidden;
-     text-overflow: ellipsis;
-     border: 1px solid #dee2e6;
-     border-bottom-width: 2px;
  }
 
  .table tbody tr td {
@@ -138,7 +129,7 @@
 
  /* 分页控件样式 */
  .pagination {
-     margin-top: 20px;
+     margin-bottom: 0;
  }
 
  .pagination .page-item.active .page-link {
@@ -174,96 +165,27 @@
      white-space: nowrap;
      overflow: hidden;
      text-overflow: ellipsis;
-     cursor: pointer;
-     padding: 5px 0;
-     position: relative;
      max-width: 100%;
-     border: 1px solid transparent;
-     transition: all 0.2s ease;
-     padding-right: 25px;
-     /* 为图标留出空间 */
-     background: linear-gradient(to right,
-             transparent 70%,
-             rgba(245, 245, 245, 0.7) 90%,
-             rgba(240, 240, 240, 0.9) 100%);
- }
-
- .comment-text-single-line::before {
-     content: "...";
-     position: absolute;
-     right: 8px;
-     color: #6c757d;
-     font-weight: bold;
-     opacity: 0.7;
+     cursor: pointer;
+     padding: 5px;
+     border-radius: 4px;
+     transition: all 0.3s;
  }
 
  .comment-text-single-line:hover {
-     background-color: #f8f9fa;
-     border: 1px dashed #6c757d;
-     border-radius: 3px;
-     padding-left: 5px;
-     background: #f8f9fa;
+     background-color: #f0f0f0;
  }
 
  /* 展开的评论内容 */
  .comment-text-expanded {
-     white-space: pre-wrap;
-     max-height: 150px;
-     overflow-y: auto;
-     cursor: pointer;
-     padding: 8px;
-     border-radius: 4px;
+     white-space: normal;
+     overflow: visible;
+     text-overflow: clip;
      background-color: #f8f9fa;
-     border: 1px solid #dee2e6;
-     position: relative;
-     margin: 5px 0;
-     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
- }
-
- /* 展开/收起指示器 */
- .comment-text-single-line::after {
-     content: "点击展开";
-     position: absolute;
-     right: 5px;
-     top: 50%;
-     transform: translateY(-50%);
-     font-size: 12px;
-     color: #fff;
-     background-color: #6c757d;
-     padding: 2px 8px;
-     border-radius: 12px;
-     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-     transition: all 0.2s ease;
-     opacity: 0;
-     /* 默认隐藏 */
- }
-
- .comment-text-single-line:hover::after {
-     background-color: #5a6268;
-     opacity: 1;
-     /* 鼠标悬停时显示 */
- }
-
- .comment-text-expanded::after {
-     content: "点击收起";
-     position: absolute;
-     right: 5px;
-     top: 5px;
-     font-size: 12px;
-     color: #fff;
-     background-color: #6c757d;
-     padding: 2px 8px;
-     border-radius: 12px;
-     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-     transition: all 0.2s ease;
-     opacity: 0;
-     /* 默认隐藏 */
- }
-
- .comment-text-expanded:hover::after {
-     background-color: #5a6268;
-     opacity: 1;
-     /* 鼠标悬停时显示 */
+     padding: 10px;
+     border-radius: 4px;
+     cursor: pointer;
+     transition: all 0.3s;
  }
 
  /* 确保表格内容不会溢出 */
@@ -279,14 +201,14 @@
  }
 
  /* 响应式调整 */
- @media (max-width: 992px) {
+ @media (max-width: 768px) {
      .sidebar {
+         height: auto;
          position: static;
-         min-height: auto;
      }
 
      .main-content {
-         padding: 20px;
+         margin-top: 20px;
      }
  }
 
@@ -323,10 +245,6 @@
 
  /* 批量操作区域样式 */
  .batch-operations {
-     display: flex;
-     align-items: center;
-     padding: 10px 0;
-     border-top: 1px solid #e9ecef;
      margin-top: 15px;
  }
 
@@ -371,4 +289,23 @@
  #recent-comments-list .comment-text-expanded {
      margin: 3px 0;
      max-height: 100px;
+ }
+
+ /* 小说管理样式 */
+ #novels .table th {
+     vertical-align: middle;
+ }
+
+ #novels .table td {
+     vertical-align: middle;
+ }
+
+ /* 批量添加小说文本框 */
+ #batch-novel-data {
+     font-family: monospace;
+ }
+
+ /* 模态框样式 */
+ .modal-body form .form-label {
+     font-weight: 500;
  }

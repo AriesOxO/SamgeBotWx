@@ -1,0 +1,17 @@
+{
+  "name": "samge-bot-wx",
+  "version": "1.0.0",
+  "description": "微信机器人小说评论管理系统",
+  "scripts": {
+    "dev": "cd cmd/server/web/admin-vue && npm run dev",
+    "build": "cd cmd/server/web/admin-vue && npm run build",
+    "preview": "cd cmd/server/web/admin-vue && npm run preview",
+    "install-deps": "cd cmd/server/web/admin-vue && npm install",
+    "lint": "cd cmd/server/web/admin-vue && npm run lint",
+    "format": "cd cmd/server/web/admin-vue && npm run format"
+  },
+  "keywords": ["vue", "admin", "novel", "comment", "management"],
+  "author": "",
+  "license": "MIT",
+  "workspaces": ["cmd/server/web/admin-vue"]
+} 

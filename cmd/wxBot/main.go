@@ -33,8 +33,8 @@ func RunBot() {
 }
 func main() {
 	go db.InitDB()
-// 	go RunBot()
+	// 	go RunBot()
 	go server.StartApiServer()
-	go server.StartWebServer()
+	//go server.StartWebServer()
 	select {}
 }

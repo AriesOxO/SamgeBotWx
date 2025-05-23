@@ -1,0 +1,39 @@
+// 主题色变量
+$primary-color: #409EFF;
+$success-color: #67C23A;
+$warning-color: #E6A23C;
+$danger-color: #F56C6C;
+$info-color: #909399;
+
+// 字体
+$font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+$font-size-base: 14px;
+$font-size-small: 12px;
+$font-size-medium: 16px;
+$font-size-large: 18px;
+
+// 布局尺寸
+$header-height: 60px;
+$sidebar-width: 220px;
+$sidebar-collapsed-width: 64px;
+
+// 边距
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// 边框
+$border-radius-base: 4px;
+$border-radius-medium: 8px;
+$border-radius-large: 12px;
+
+// 过渡效果
+$transition-duration: 0.3s;
+$transition-timing-function: ease-in-out;
+
+// 阴影
+$box-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+$box-shadow-base: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+$box-shadow-dark: 0 2px 8px rgba(0, 0, 0, 0.2);

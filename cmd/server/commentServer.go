@@ -9,7 +9,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -61,6 +60,11 @@ func StartApiServer() {
 		if endTime := c.Query("endTime"); endTime != "" {
 			query = query.Where("create_time <= ?", endTime)
 		}
+		if typeParam := c.Query("type"); typeParam != "" {
+			if typeValue, err := strconv.Atoi(typeParam); err == nil && (typeValue == 1 || typeValue == 2) {
+				query = query.Where("novel_type = ?", typeValue)
+			}
+		}
 
 		query = query.Order("create_time desc").Find(&comments)
 		// 获取总记录数
@@ -87,6 +91,7 @@ func StartApiServer() {
 		wxNickName := c.Query("wxNickName")
 		novelTitle := c.Query("novelTitle")
 		number := c.Query("number")
+		typeParam := c.Query("type")
 		condition := "1=1"
 
 		if wxNickName != "" {
@@ -99,6 +104,12 @@ func StartApiServer() {
 
 		if number != "" {
 			condition += " AND number = '" + number + "'"
+		}
+
+		if typeParam != "" {
+			if typeValue, err := strconv.Atoi(typeParam); err == nil && (typeValue == 1 || typeValue == 2) {
+				condition += " AND novel_type = " + typeParam
+			}
 		}
 		var result []db.CommentStatic
 		if sortType == "" {
@@ -339,28 +350,27 @@ func StartApiServer() {
 			return
 		}
 
-		// 获取小说目录配置
-		catalogueSetting, err := db.GetSettingByKey("novel_catalogue")
+		// 将number转换为整数
+		numberInt, err := strconv.Atoi(number)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "获取小说目录失败",
-			})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid number parameter"})
 			return
 		}
 
-		// 验证小说标题
-		isValid := strings.Contains(catalogueSetting.Value, novelTitle)
-		if !isValid {
+		// 根据小说标题和届数查询小说
+		novel, err := db.GetNovelByTitleAndNumber(novelTitle, numberInt)
+		if err != nil {
 			c.JSON(http.StatusOK, gin.H{
 				"exists":  false,
-				"message": "小说名称不存在",
+				"message": "小说不存在",
 			})
 			return
 		}
 
 		c.JSON(http.StatusOK, gin.H{
-			"exists":  true,
-			"message": "小说名称有效",
+			"exists":    true,
+			"novelType": novel.Type,
+			"message":   "小说验证成功",
 		})
 	})
 
@@ -494,6 +504,11 @@ func StartApiServer() {
 		}
 		if author := c.Query("author"); author != "" {
 			query = query.Where("author LIKE ?", "%"+author+"%")
+		}
+		if typeParam := c.Query("type"); typeParam != "" {
+			if typeValue, err := strconv.Atoi(typeParam); err == nil && (typeValue == 1 || typeValue == 2) {
+				query = query.Where("type = ?", typeValue)
+			}
 		}
 
 		// 先获取总记录数

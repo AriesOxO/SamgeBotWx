@@ -20,6 +20,7 @@ type Comment struct {
 	Number      int    `gorm:"not null;column:number"`
 	NovelTitle  string `gorm:"not null;column:novel_title"`
 	CommentText string `gorm:"column:comment"`
+	NovelType   int    `gorm:"not null;column:novel_type"` // 新增：文章类型 1-正文 2-彩蛋
 	CreateTime  string `gorm:"not null;column:create_time"`
 	UpdateTime  string `gorm:"not null;column:update_time"`
 }
@@ -38,6 +39,7 @@ type Novel struct {
 	NovelTitle string `gorm:"not null;column:novel_title" json:"NovelTitle"`
 	Number     int    `gorm:"not null;column:number" json:"Number"`
 	Author     string `gorm:"not null;column:author" json:"Author"`
+	Type       int    `gorm:"not null;column:type;default:1" json:"Type"` // 新增：文章类型 1-正文 2-彩蛋
 	CreateTime string `gorm:"not null;column:create_time" json:"CreateTime"`
 	UpdateTime string `gorm:"not null;column:update_time" json:"UpdateTime"`
 }
@@ -58,6 +60,7 @@ func InitDB() error {
 		return err
 	}
 	log.Println("数据库初始化成功")
+
 	sqlDB, err := DB.DB()
 	if err != nil {
 		return fmt.Errorf("failed to get database instance: %w", err)
@@ -277,6 +280,16 @@ func GetNovelsByNumber(number int) ([]*Novel, error) {
 func GetNovelByCondition(novelTitle string, number int, author string) (*Novel, error) {
 	novel := &Novel{}
 	result := DB.Where("novel_title = ? AND number = ? AND author = ?", novelTitle, number, author).First(novel)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return novel, nil
+}
+
+// GetNovelByTitleAndNumber 根据小说标题和届数查询小说
+func GetNovelByTitleAndNumber(novelTitle string, number int) (*Novel, error) {
+	novel := &Novel{}
+	result := DB.Where("novel_title = ? AND number = ?", novelTitle, number).First(novel)
 	if result.Error != nil {
 		return nil, result.Error
 	}
